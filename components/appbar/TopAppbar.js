@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'next/link';
 import { useRouter } from 'next/router';
+import { ButtonBase } from '@mui/material';
 
 export default function TopAppbar() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function TopAppbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar sx={{justifyContent: 'space-between'}}>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
           {/* <IconButton
             size="large"
             edge="start"
@@ -25,9 +26,11 @@ export default function TopAppbar() {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography variant="h6" component="span" onClick={() => { router.push('/') }}>
-            MintTool
-          </Typography>
+          <ButtonBase onClick={() => { router.push('/') }}>
+            <Typography variant="h6" component="span">
+              MintTool
+            </Typography>
+          </ButtonBase>
           <div>
             <Button color="inherit" onClick={() => { router.push('/mint') }} >Mint</Button>
             <Button color="inherit" onClick={() => { router.push('/createnft') }} >CreateNFT</Button>
