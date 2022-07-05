@@ -1,7 +1,8 @@
-import { Card, CardContent, CardMedia } from "@mui/material";
+import { Card, CardContent, CardMedia, IconButton } from "@mui/material";
 import { useState } from "react";
+import CloseIcon from '@mui/icons-material/Close';
 
-export default function ImageLoader(){
+export default function ImageLoader({handleOnX}){
     const [imgFile, setImgFile] = useState(null);
 
     const handleImgChange = (e)=>{
@@ -12,11 +13,13 @@ export default function ImageLoader(){
         }
         reader.readAsDataURL(curImgFile);
     }
+    const handleX = handleOnX ?? null;
 
     return (
         <>
             <Card>
                 <CardContent>
+                    { handleX ? <IconButton onClick={handleX} ><CloseIcon></CloseIcon></IconButton>  : null }
                     <CardMedia
                         component="img"
                         image={imgFile}
