@@ -27,6 +27,7 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 
@@ -49,4 +50,9 @@ footer a {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.displaySelectedContainer {
+  min-width: 300px;
+  min-height: 300px;
 }
