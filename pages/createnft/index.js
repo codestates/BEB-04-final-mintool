@@ -1,7 +1,7 @@
 import ImageLoader from "../../components/ImageLoader/ImageLoader";
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { Button, Card, CardContent, CardMedia, Divider, IconButton, Input, Typography } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 
 const createnftpage = () => {
@@ -24,10 +24,21 @@ const createnftpage = () => {
         setAttributesTabs(tmpArr);
     }
 
+    const handleClickSubmint = ()=>{
+
+    }
+    const handleClicktest = ()=>{
+
+    }
+
+
+
     return (
         <div className="container" style={{ padding: '15px', justifyContent: 'flex-start' }}>
             <div>
                 <Button onClick={resetDisplay}>reset</Button>
+
+
                 <Card style={{marginBottom:'15px'}}>
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
@@ -41,12 +52,15 @@ const createnftpage = () => {
                         })}
                     </div>
                 </Card>
+
             </div>
             <Divider style={{ width: '100%' }}></Divider>
             <div style={{marginTop:'15px'}}>
                 <Button onClick={() => { setAttributesTabs([...attributeTabs, attributeTabs.slice(-1)[0] + 1]) }}>Add attribute</Button>
-                {attributeTabs.map((el, idx) => <ImageLoader key={attributeTabs[idx]} handleImgClick={handleImgClick} resetDisplay={resetDisplay} isBackGround={el} handleClickX={removeOneTap} />)}
+                {attributeTabs.map((el, idx) => <ImageLoader key={attributeTabs[idx]} handleImgClick={handleImgClick} resetDisplay={resetDisplay} isBackGround={el} handleClickX={removeOneTap} handleClicktest={handleClicktest} />)}
             </div>
+            <Button onClick={handleClickSubmint}>Create NFT Contract!!</Button>
+            <Button onClick={handleClicktest}>SendToServerTest</Button>
         </div>
     )
 }
