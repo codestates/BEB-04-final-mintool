@@ -2,6 +2,8 @@
 import sharp from 'sharp';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import mongoClient from '../../lib/mongodb'
+require('dotenv').config();
+
 
 type simpleParsedObj = { [idx: string]: string }
 type indexSignaturesOfParedObj = {
@@ -15,6 +17,7 @@ interface reqBodyObject {
   [key: string]: indexSignaturesOfParedObj | simpleParsedObj
   description: simpleParsedObj
   external_url: simpleParsedObj
+  projectName : simpleParsedObj
 }
 
 function isIndexSignaturesOfParedObj(arg: any): arg is indexSignaturesOfParedObj {
@@ -28,7 +31,12 @@ export default async function handler(
   res: NextApiResponse
 ) {
 
+  // hard coded data 
+const siteURL = process.env.SITE_URL;
+  //
+
   const myObj: reqBodyObject = JSON.parse(req.body);
+  console.log(siteURL);
   console.log(Object.keys(myObj));
   console.log(Object.values(myObj.description));
   console.log(Object.values(myObj.external_url));
@@ -60,7 +68,7 @@ export default async function handler(
   else { res.send({ message: 'received data is not right' }); return; }
 
   // 
-  for (let index of Object.keys(myObj).slice(1, -2)) {
+  for (let index of Object.keys(myObj).slice(1, -3)) {
 
     if (isIndexSignaturesOfParedObj(myObj[index])) {
       const indexedObj = myObj[index] as indexSignaturesOfParedObj;
@@ -132,7 +140,7 @@ export default async function handler(
       imgObj['img'] = e.imgBuffer
       return imgObj;
     })
-  myClient.db('test').collection('img').insertMany(dbImgItem);
+  myClient.db(`${myObj.projectName}`).collection('img').insertMany(dbImgItem);
 
   const dbMetaItem =
     dataArr.map((e, idx) => {
@@ -148,17 +156,18 @@ export default async function handler(
       //     }
 
       //   );
-      metaObj[`meta_${idx}`] =
+      metaObj['index'] = idx;
+      metaObj[`object`] =
       {
         description: myObj.description,
         external_url: myObj.external_url,
-        image: 'imgURL',
-        name : `testName # ${idx}`,
+        image: `${siteURL}/api/fs/${myObj.projectName}/img/${idx}`,
+        name : `${myObj.projectName} #${idx}`,
         attributes : e.meta
       }
       return metaObj;
     })
-  myClient.db('test').collection('meta').insertMany(dbMetaItem);
+  myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem);
 
 
   res.send("hi");
