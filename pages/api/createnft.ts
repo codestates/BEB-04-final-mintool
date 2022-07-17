@@ -92,7 +92,7 @@ const siteURL = req.headers.host;
           const img = await
             sharp(baseImg)
               .composite([
-                { input: new Uint8Array(Object.values(indexedObj.fileArr[myObjIndex])) }
+                { input : (new Uint8Array(Object.values(indexedObj.fileArr[myObjIndex])) as Buffer) }
               ])
               .toBuffer()
 
