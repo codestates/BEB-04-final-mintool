@@ -31,6 +31,15 @@ body {
   flex-wrap: wrap;
 }
 
+.HorizontalContainer {
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 
 footer {
   width: 100%;
