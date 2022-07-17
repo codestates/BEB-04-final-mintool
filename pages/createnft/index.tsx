@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React, { BaseSyntheticEvent, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import ImageLoader from '../../components/ImageLoader/ImageLoader'
-import { TextField } from '@mui/material'
+import { Button, CircularProgress, TextField } from '@mui/material'
 
 type dataObject = {
   [num: number]: {
@@ -31,6 +31,7 @@ const CreateNFT: NextPage = () => {
   const [projectName, setProjectName] = useState<string>('');
   const [descriptionValue, setDescriptionValue] = useState<string>('');
   const [external_urlValue, setExternal_urlValue] = useState<string>('');
+  const [isWaiting, setIsWainting] = useState<Boolean>(false);
 
   const handleTextFieldChange = (e: BaseSyntheticEvent, handlesetFuncion: any) => {
     handlesetFuncion(e.target.value);
@@ -48,10 +49,23 @@ const CreateNFT: NextPage = () => {
   }
 
   const handleSend = () => {
+
+    setIsWainting(true);
     dataObj.description = descriptionValue;
     dataObj.external_url = external_urlValue;
     dataObj.projectName = projectName;
-    console.log("total numArr : ", Object.keys(dataObj));
+    if(dataObj.description?.length + dataObj.external_url?.length + dataObj.projectName?.length  < 3) { alert("textinput is not right"); setIsWainting(false); return; }
+    // console.log("total numArr : ", Object.keys(dataObj));
+
+    let isRight = true;
+    Object.keys(dataObj).slice(0, -3).forEach(k=>{
+      const kNumber = parseInt(k);
+      if(dataObj[kNumber].fileArr.length <1) isRight=false;
+      if(dataObj[kNumber].fileArr.length !== dataObj[kNumber].values.length) isRight=false;
+      if(dataObj[kNumber].AttrName === undefined) isRight=false;
+    })
+    if(!isRight) { alert("Image input is not right"); setIsWainting(false); return; }
+
     const promiseArr = Object.keys(dataObj).slice(0, -3).map(myKey => {
 
       const objKey = parseInt(myKey);
@@ -70,11 +84,14 @@ const CreateNFT: NextPage = () => {
 
     Promise.all(promiseArr)
       // .then(x=> {dataObj.description = descriptionValue; dataObj.external_url=external_urlValue; return 1;} )
-      .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) }))
+      .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) }).then(w=>setIsWainting(false)) )
   }
 
+
+
+
   return (
-    <div>
+    <div className='container'>
       <div>
         <div style={{display : 'flex', justifyContent: 'center', margin : '10px' }}>
             <TextField label="ProjectName" onChange={(e)=>{ handleTextFieldChange(e, setProjectName)}} value={projectName} ></TextField>
@@ -89,7 +106,7 @@ const CreateNFT: NextPage = () => {
         <ImageLoader myKey={0} handleSetDataObj={handleSetDataObj}></ImageLoader>
       </div>
       <br /><br /><br />
-      <button onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</button>
+      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
       <br />
       {
         attrTabArr.slice(1).map(e => {
@@ -103,7 +120,8 @@ const CreateNFT: NextPage = () => {
       }
 
       <br /><br />
-      <button onClick={handleSend}>send</button>
+      <Button variant="contained" onClick={handleSend}>send</Button>
+      {isWaiting ? <CircularProgress></CircularProgress> : <></>}
       {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>

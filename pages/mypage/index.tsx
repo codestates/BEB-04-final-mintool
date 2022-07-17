@@ -30,7 +30,7 @@ const MyPage: NextPage = () => {
                     const metaDataObj: any = metaData.object ?? null;
                     const imgSrc = `http://${metaDataObj.image}`;
                     return (
-                        <div style={{margin:'5px'}}>
+                        <div style={{margin:'5px'}} key={metaDataObj.name}>
                             <Card>
                                 <CardContent>
                                     <span>{metaDataObj.name}</span>
@@ -50,7 +50,7 @@ const MyPage: NextPage = () => {
                                     {
                                         metaDataObj.attributes.map((attrObj : any)=>{
                                             return(
-                                                <div>
+                                                <div key={attrObj?.trait_type}>
                                                     <span>{attrObj?.trait_type} : {attrObj?.value}</span>
                                                     
                                                 </div>
@@ -62,7 +62,7 @@ const MyPage: NextPage = () => {
                                     <Chip label="metaData"></Chip>
                                 </Divider>
                                 <CardContent>
-                                    <TextField multiline value={ JSON.stringify(metaDataArr[idx].object) } inputProps={{readonly: true}}></TextField>
+                                    <TextField multiline value={ JSON.stringify(metaDataArr[idx].object) } inputProps={{readOnly: true}}></TextField>
                                 </CardContent>
                             </Card>
                         </div>
