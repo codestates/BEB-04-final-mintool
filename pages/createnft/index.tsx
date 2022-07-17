@@ -84,7 +84,7 @@ const CreateNFT: NextPage = () => {
 
     Promise.all(promiseArr)
       // .then(x=> {dataObj.description = descriptionValue; dataObj.external_url=external_urlValue; return 1;} )
-      .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) }).then(w=>setIsWainting(false)) )
+      .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) }).then(w=>{setIsWainting(false); alert("NFT creation done!")}) )
   }
 
 
