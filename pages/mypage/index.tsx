@@ -48,7 +48,7 @@ const MyPage: NextPage = () => {
                                 <CardContent>
                                     
                                     {
-                                        metaDataObj.attributes.map(attrObj=>{
+                                        metaDataObj.attributes.map((attrObj : any)=>{
                                             return(
                                                 <div>
                                                     <span>{attrObj?.trait_type} : {attrObj?.value}</span>
