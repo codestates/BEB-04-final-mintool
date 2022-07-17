@@ -46,7 +46,6 @@ const MyPage: NextPage = () => {
                                     <Chip label="Attributes"></Chip>
                                 </Divider>
                                 <CardContent>
-                                    {/* <Typography variant="h6" component="div">Attributes</Typography> */}
                                     
                                     {
                                         metaDataObj.attributes.map(attrObj=>{
@@ -58,6 +57,12 @@ const MyPage: NextPage = () => {
                                             )
                                         })
                                     }
+                                </CardContent>
+                                <Divider>
+                                    <Chip label="metaData"></Chip>
+                                </Divider>
+                                <CardContent>
+                                    <TextField multiline value={ JSON.stringify(metaDataArr[idx].object) } inputProps={{readonly: true}}></TextField>
                                 </CardContent>
                             </Card>
                         </div>
