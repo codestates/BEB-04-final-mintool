@@ -1,0 +1,25 @@
+.cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.cardContainer > * {
+    margin : 5px;
+}
+
+
+.imgLoaderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flexContainer {
+    display: flex;
+}
+
+
+.iconClose {
+    float : left;
+}

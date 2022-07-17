@@ -12,6 +12,7 @@ body {
 }
 
 .container {
+  margin : 5px;
   min-height: 100vh;
   padding: 0 0.5rem;
   display: flex;
@@ -22,6 +23,15 @@ body {
 
 .containerH {
   min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.HorizontalContainer {
   padding: 0 0.5rem;
   display: flex;
   flex-direction: row;

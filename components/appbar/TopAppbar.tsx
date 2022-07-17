@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'next/link';
 import { useRouter } from 'next/router';
 import { ButtonBase } from '@mui/material';
 
@@ -34,6 +33,7 @@ export default function TopAppbar() {
           <div>
             <Button color="inherit" onClick={() => { router.push('/mint') }} >Mint</Button>
             <Button color="inherit" onClick={() => { router.push('/createnft') }} >CreateNFT</Button>
+            <Button color="inherit" onClick={() => { router.push('/mypage') }} >MyPage</Button>
             <Button color="inherit" onClick={() => { router.push('/ticket') }} >Ticket</Button>
           </div>
         </Toolbar>
