@@ -16,11 +16,16 @@ export default async function handler(
     if (typeof projectname === 'string') {
         const myClient = await promiseClinet;
         
-        // const myImg = await myClient.db(projectname).collection('img').find().toArray();
+        const myImg : any = await myClient.db(projectname).collection('img').find().toArray();
         const myMeta = await myClient.db(projectname).collection('meta').find().toArray();
+        // const retImg : Buffer = tmp?.img?.buffer;
+        const ImgArr =
+        Object.keys(myImg).map((imgObjIdx : string) =>{
+            return myImg[imgObjIdx].img?.buffer;
+        })
         
-        res.send({img : null, meta : myMeta});
-        
+        res.send({img : ImgArr, meta : myMeta});
+        // const retImg : Buffer = tmp?.img?.buffer;
         // res.send(retImg.toString('base64'));
     }
     else { res.send({message : 'wrong access!'}); return; }
