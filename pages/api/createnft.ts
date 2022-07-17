@@ -32,14 +32,17 @@ export default async function handler(
 ) {
 
   // hard coded data 
-const siteURL = process.env.SITE_URL;
+// const siteURL = process.env.SITE_URL;
+const siteURL = req.headers.host;
+// console.log(req.headers.host);
   //
+  
 
   const myObj: reqBodyObject = JSON.parse(req.body);
-  console.log(siteURL);
-  console.log(Object.keys(myObj));
-  console.log(Object.values(myObj.description));
-  console.log(Object.values(myObj.external_url));
+  // console.log(siteURL);
+  // console.log(Object.keys(myObj));
+  // console.log(Object.values(myObj.description));
+  // console.log(Object.values(myObj.external_url));
 
   // console.log(myObj['1']['AttrName'], myObj['1']['values']);
 
