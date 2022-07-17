@@ -170,10 +170,10 @@ const siteURL = req.headers.host;
       }
       return metaObj;
     })
-  myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem);
+  const dbres = await myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem);
 
-
-  res.send("hi");
+  if(dbres.acknowledged) {res.send({message : true}); return;}
+  res.send({message : false});
 
 }
 
