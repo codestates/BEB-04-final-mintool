@@ -21,6 +21,15 @@ body {
   align-items: center;
 }
 
+.containerCenter {
+  margin : 5px;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .containerH {
   min-height: 100vh;
   padding: 0 0.5rem;
