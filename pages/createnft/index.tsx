@@ -54,7 +54,7 @@ const CreateNFT: NextPage = () => {
     dataObj.description = descriptionValue;
     dataObj.external_url = external_urlValue;
     dataObj.projectName = projectName;
-    if (dataObj.description?.length > 0 && dataObj.external_url?.length > 0 && dataObj.projectName?.length > 0) { alert("textinput is not right"); setIsWainting(false); return; }
+    if (dataObj.description?.length < 1 || dataObj.external_url?.length < 1 || dataObj.projectName?.length < 1) { alert("textinput is not right"); setIsWainting(false); return; }
     // console.log("total numArr : ", Object.keys(dataObj));
 
     let isRight = true;
