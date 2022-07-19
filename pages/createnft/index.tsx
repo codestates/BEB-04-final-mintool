@@ -54,7 +54,7 @@ const CreateNFT: NextPage = () => {
     setIsWainting(true);
     dataObj.description = descriptionValue ?? '';
     dataObj.external_url = external_urlValue ?? '';
-    if(projectName.length < 1) {setIsWainting(false); alert('projectName should have values') return;}
+    if(projectName.length < 1) {setIsWainting(false); alert('projectName should have values'); return;}
     dataObj.projectName = projectName;
     
 
