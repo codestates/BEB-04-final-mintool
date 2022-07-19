@@ -11,14 +11,14 @@ export default async function handler(
     // db access auth code neeeeeded!!  
     //
 
-    console.log(projectname, metaid);
+    // console.log(projectname, metaid);
     // res.send('hi');
     if (typeof projectname === 'string' && typeof metaid === 'string') {
         const myClient = await promiseClinet;
 
         const tmp = await myClient.db(projectname).collection('meta').find({ index : parseInt(metaid) }).toArray();
-        console.log(tmp)
-        res.send(tmp[0]);
+        // console.log(tmp)
+        res.send(JSON.stringify(tmp[0].object).slice(1,-1));
         
         // res.send(retImg.toString('base64'));
     }

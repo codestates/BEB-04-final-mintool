@@ -5,6 +5,7 @@ import React, { BaseSyntheticEvent, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import ImageLoader from '../../components/ImageLoader/ImageLoader'
 import { Button, CircularProgress, TextField, Typography } from '@mui/material'
+import AlertDialog from '../../components/Alert/Alert'
 
 type dataObject = {
   [num: number]: {
@@ -51,11 +52,11 @@ const CreateNFT: NextPage = () => {
   const handleSend = () => {
 
     setIsWainting(true);
-    dataObj.description = descriptionValue;
-    dataObj.external_url = external_urlValue;
+    dataObj.description = descriptionValue ?? '';
+    dataObj.external_url = external_urlValue ?? '';
+    if(projectName.length < 1) {setIsWainting(false); alert('projectName should have values') return;}
     dataObj.projectName = projectName;
-    if (dataObj.description?.length < 1 || dataObj.external_url?.length < 1 || dataObj.projectName?.length < 1) { alert("textinput is not right"); setIsWainting(false); return; }
-    // console.log("total numArr : ", Object.keys(dataObj));
+    
 
     let isRight = true;
     Object.keys(dataObj).slice(0, -3).forEach(k => {
