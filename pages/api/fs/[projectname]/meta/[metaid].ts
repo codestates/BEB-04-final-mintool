@@ -18,7 +18,7 @@ export default async function handler(
 
         const tmp = await myClient.db(projectname).collection('meta').find({ index : parseInt(metaid) }).toArray();
         // console.log(tmp)
-        res.send(JSON.stringify(tmp[0].object).slice(1,-1));
+        res.send(JSON.stringify(tmp[0].object));
         
         // res.send(retImg.toString('base64'));
     }
