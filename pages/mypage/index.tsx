@@ -1,77 +1,18 @@
-import { ExpandMore } from "@mui/icons-material";
-import { Button, Card, CardActions, CardContent, CardMedia, Chip, CircularProgress, Divider, TextField, Typography } from "@mui/material";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useAppContext } from "../../context/state";
+import SearchProject  from "../../components/SearchProject/SearchProject"
 
 const MyPage: NextPage = () => {
-    const [projectName, setProjectName] = useState<string>('');
-    const [metaDataArr, setMetaDataArr] = useState<Array<any>>([]);
-    const [isWaiting, setIsWainting] = useState<Boolean>(false);
-
-
-
-    const handleEnter = () => {
-        setIsWainting(true);
-        fetch(`/api/fs/${projectName}`, { method: "POST", })
-            .then(r => r.json())
-            .then(x => { setIsWainting(false); console.log(x, Object.keys(x.meta), Object.values(x.meta)); setMetaDataArr(Object.values(x.meta)); return x; })
-        // .then(rj => setMetaDataArr(Object.values(rj.meta)))
-
-    }
+    const context = useAppContext();
 
     return (
-        <div className="container">
-            <TextField
-                onChange={(e) => { setProjectName(e.target.value) }}
-                onKeyUp={(e) => { if (e.key === 'Enter') { handleEnter() } }}
-                value={projectName}
-                label="ProjectName" />
-            {isWaiting ? <CircularProgress/> : <></>}
-            <div className="HorizontalContainer">
-                {metaDataArr.map((metaData, idx) => {
-                    const metaDataObj: any = metaData.object ?? null;
-                    const imgSrc = `http://${metaDataObj.image}`;
-                    return (
-                        <div style={{ margin: '5px' }} key={metaDataObj.name}>
-                            <Card>
-                                <CardContent>
-                                    <span>{metaDataObj.name}</span>
-                                </CardContent>
-                                <Divider></Divider>
-                                <CardMedia
-                                    component="img"
-                                    height="200"
-                                    image={imgSrc}
-                                    alt="NFT Image"
-                                />
-                                <Divider>
-                                    <Chip label="Attributes"></Chip>
-                                </Divider>
-                                <CardContent>
-
-                                    {
-                                        metaDataObj.attributes.map((attrObj: any) => {
-                                            return (
-                                                <div key={attrObj?.trait_type}>
-                                                    <span>{attrObj?.trait_type} : {attrObj?.value}</span>
-
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </CardContent>
-                                <Divider>
-                                    <Chip label="metaData"></Chip>
-                                </Divider>
-                                <CardContent>
-                                    <TextField multiline value={JSON.stringify(metaDataArr[idx].object)} inputProps={{ readOnly: true }}></TextField>
-                                </CardContent>
-                            </Card>
-                        </div>
-                    )
-                })}
-            </div>
-        </div>
+        <> 
+        {context.accountAddress.length > 0 ?  
+        <SearchProject></SearchProject>
+        :
+        <div>Login plz</div>
+    }
+    </>
     )
 }
 

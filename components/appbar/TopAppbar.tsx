@@ -4,14 +4,15 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import { useRouter } from 'next/router';
 import { ButtonBase } from '@mui/material';
+import { useAppContext } from '../../context/state';
+import MetaMaskLogin from '../MetamaskLogin/MetamaskLogin'
 
 export default function TopAppbar() {
   const router = useRouter();
-
+  const context = useAppContext();
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -34,7 +35,9 @@ export default function TopAppbar() {
             <Button color="inherit" onClick={() => { router.push('/mint') }} >Mint</Button>
             <Button color="inherit" onClick={() => { router.push('/createnft') }} >CreateNFT</Button>
             <Button color="inherit" onClick={() => { router.push('/mypage') }} >MyPage</Button>
-            <Button color="inherit" onClick={() => { router.push('/ticket') }} >Ticket</Button>
+            {/* <Button color="inherit" onClick={() => { router.push('/login') }} >Login</Button> */}
+            <MetaMaskLogin cb={()=>{}}></MetaMaskLogin>
+            {/* <Button color="inherit" onClick={()=>{ console.log(context) }}>contextTest</Button> */}
           </div>
         </Toolbar>
       </AppBar>
