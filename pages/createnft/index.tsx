@@ -15,7 +15,8 @@ type dataObject = {
   }
   description?: string,
   external_url?: string,
-  projectName?: string
+  projectName?: string,
+  symbol?: string
 }
 
 
@@ -33,6 +34,7 @@ const CreateNFT: NextPage = () => {
   const [descriptionValue, setDescriptionValue] = useState<string>('');
   const [external_urlValue, setExternal_urlValue] = useState<string>('');
   const [isWaiting, setIsWainting] = useState<Boolean>(false);
+  const [symbol, setSymbol] = useState<string>('');
 
   const handleTextFieldChange = (e: BaseSyntheticEvent, handlesetFuncion: any) => {
     handlesetFuncion(e.target.value);
@@ -54,12 +56,14 @@ const CreateNFT: NextPage = () => {
     setIsWainting(true);
     dataObj.description = descriptionValue ?? '';
     dataObj.external_url = external_urlValue ?? '';
-    if(projectName.length < 1) {setIsWainting(false); alert('projectName should have values'); return;}
+    if (projectName.length < 1) { setIsWainting(false); alert('projectName should have values'); return; }
+    if (symbol.length < 1) { setIsWainting(false); alert('projectName should have values'); return; }
     dataObj.projectName = projectName;
-    
+    dataObj.symbol = symbol;
+
 
     let isRight = true;
-    Object.keys(dataObj).slice(0, -3).forEach(k => {
+    Object.keys(dataObj).slice(0, -4).forEach(k => {
       const kNumber = parseInt(k);
       if (dataObj[kNumber].fileArr.length < 1) isRight = false;
       if (dataObj[kNumber].fileArr.length !== dataObj[kNumber].values.length) isRight = false;
@@ -67,7 +71,7 @@ const CreateNFT: NextPage = () => {
     })
     if (!isRight) { alert("Image input is not right"); setIsWainting(false); return; }
 
-    const promiseArr = Object.keys(dataObj).slice(0, -3).map(myKey => {
+    const promiseArr = Object.keys(dataObj).slice(0, -4).map(myKey => {
 
       const objKey = parseInt(myKey);
       const a: Array<Promise<Uint8Array>> = dataObj[objKey].fileArr.map(file => {
@@ -101,7 +105,10 @@ const CreateNFT: NextPage = () => {
     <div className='container'>
       <div className='containerCenter'>
         <Typography variant="h2" component="h2">Create NFT</Typography>
-        <TextField label="ProjectName" onChange={(e) => { handleTextFieldChange(e, setProjectName) }} value={projectName} ></TextField>
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '10px' }}>
+          <TextField label="ProjectName" onChange={(e) => { handleTextFieldChange(e, setProjectName) }} value={projectName} ></TextField>
+          <TextField label="Symbol" onChange={(e) => { handleTextFieldChange(e, setSymbol) }} value={symbol} ></TextField>
+        </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', margin: '10px' }}>
           <TextField label="description" multiline onChange={(e) => { handleTextFieldChange(e, setDescriptionValue) }} value={descriptionValue}></TextField>
@@ -111,7 +118,7 @@ const CreateNFT: NextPage = () => {
         <Typography variant="h4" component="div">Bottom layer</Typography>
         <ImageLoader myKey={0} handleSetDataObj={handleSetDataObj}></ImageLoader>
       </div>
-      <br/>
+      <br />
 
       <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
       <br />
@@ -129,7 +136,7 @@ const CreateNFT: NextPage = () => {
       <br />
       <Button variant="contained" onClick={handleSend}>send</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
-      {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
+      <button onClick={() => { console.log(dataObj) }}>log dataObj</button>
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
   )

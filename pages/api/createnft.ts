@@ -18,6 +18,7 @@ interface reqBodyObject {
   description: simpleParsedObj
   external_url: simpleParsedObj
   projectName : simpleParsedObj
+  symbol : simpleParsedObj
 }
 
 function isIndexSignaturesOfParedObj(arg: any): arg is indexSignaturesOfParedObj {
@@ -53,6 +54,9 @@ const siteURL = req.headers.host;
   // let dataArr: { imgBuffer: Buffer | Uint8Array, meta: { trait_type: string, value: string }[] }[] = [];
   let dataArr: Array<{ imgBuffer: Uint8Array, meta: Array<{ trait_type: string, value: string }> }> = [];
 
+  if(!myObj.symbol) { console.log('symbol error'); res.status(400).send({message : "symbol not found"}); return;}
+  
+
   if (isIndexSignaturesOfParedObj(myObj['0'])) {
     dataArr = await Promise.all(
       myObj['0'].fileArr.map(async (file, idx) => {
@@ -71,7 +75,7 @@ const siteURL = req.headers.host;
   else { res.send({ message: 'received data is not right' }); return; }
 
   // 
-  for (let index of Object.keys(myObj).slice(1, -3)) {
+  for (let index of Object.keys(myObj).slice(1, -4)) {
 
     if (isIndexSignaturesOfParedObj(myObj[index])) {
       const indexedObj = myObj[index] as indexSignaturesOfParedObj;
@@ -135,6 +139,8 @@ const siteURL = req.headers.host;
 
 
   const myClient = await mongoClient;
+
+  myClient.db('users').collection('')
 
   const dbImgItem =
     dataArr.map((e, idx) => {

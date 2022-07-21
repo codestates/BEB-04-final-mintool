@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { ButtonBase } from '@mui/material';
 import { useAppContext } from '../../context/state';
 import MetaMaskLogin from '../MetamaskLogin/MetamaskLogin'
+import connect from '../KaikasLogin/KaikasLogin'
 
 export default function TopAppbar() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function TopAppbar() {
             <Button color="inherit" onClick={() => { router.push('/mypage') }} >MyPage</Button>
             {/* <Button color="inherit" onClick={() => { router.push('/login') }} >Login</Button> */}
             <MetaMaskLogin cb={()=>{}}></MetaMaskLogin>
-            {/* <Button color="inherit" onClick={()=>{ console.log(context) }}>contextTest</Button> */}
+            <Button color="inherit" onClick={()=>{ connect() }}>connect</Button>
           </div>
         </Toolbar>
       </AppBar>
