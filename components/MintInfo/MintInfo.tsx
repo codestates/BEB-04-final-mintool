@@ -17,7 +17,7 @@ const MintInfo = () => {
     return (
         <div>
 
-        <form action='/api/mypage' method='post'>
+        <form  action='/api/mypage' method='post' encType="multipart/form-data">
                 <div>BlockNum is {blockNum}</div>
                 <div>Mint started at BlockNum : <input type="text" name="bn"></input></div>
                 <div>Mint price : <input type="text" name="price"></input></div>
