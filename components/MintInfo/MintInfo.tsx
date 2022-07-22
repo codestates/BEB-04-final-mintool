@@ -1,8 +1,9 @@
 // import Caver from 'caver-js'
-import { Tab, Tabs, Box, Typography } from '@mui/material';
+import { Tab, Tabs, Box, Typography, Button, Dialog, DialogTitle, TextField } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import SearchProject from '../SearchProject/SearchProject';
 import BlockNum from '../BlockNum/BlockNum'
+import SimpleDialog from '../MintDialog/MintDialog';
 
 declare let caver: any;
 declare let klaytn: any;
@@ -10,33 +11,43 @@ declare let klaytn: any;
 
 function TabPanel(props: any) {
     const { children, value, index, ...other } = props;
-  
+
     return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`full-width-tabpanel-${index}`}
-        aria-labelledby={`full-width-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`full-width-tabpanel-${index}`}
+            aria-labelledby={`full-width-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{ p: 3 }}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
     );
-  }
+}
+
 
 
 const MintInfo = () => {
     const [address, setAddress] = useState<string>('');
     const [projectNameArr, setProjectNameArr] = useState<Array<string>>([]);
     const [value, setValue] = useState<number | boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (value: string) => {
+        setOpen(false);
+    };
 
     console.log('hi');
 
-    useEffect(() => { 
+    useEffect(() => {
         klaytn.enable()
             .then((r: any) => { setAddress(r[0]); return r[0] })
             .then((myAddress: string) => {
@@ -50,35 +61,47 @@ const MintInfo = () => {
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
-      };
+    };
 
 
     return (
-        <div>
-            <Tabs value={value} onChange={handleChange}>
+        <div >
+            <div style={{ width: '100vw', minHeight: '100vh', padding: '10px', float: 'left' }}>
 
-            {
-                projectNameArr.map((e:any) => (<Tab label={e}/>))
-            }
-            </Tabs>
-            {
-                projectNameArr.map((e:any, idx : number)=>{
-                    return (
-                    <TabPanel value={value} index={idx}>
-                        <SearchProject projectName={e} />
-                    </TabPanel>
-                    )
-                })
-            }
+                <Tabs value={value} onChange={handleChange}>
 
+                    {
+                        projectNameArr.map((e: any) => (<Tab label={e} />))
+                    }
+                </Tabs>
+                <div className='HorizontalContainer'>
+                    <Button variant="outlined" onClick={handleClickOpen}>Mint!</Button>
+                    <SimpleDialog
+                        open={open}
+                        onClose={handleClose}
+                    />
+                    {/* <Button>MintStart</Button> */}
+                </div>
+                {
+                    projectNameArr.map((e: any, idx: number) => {
+                        return (
+                            <TabPanel value={value} index={idx}>
+                                <SearchProject projectName={e} />
+                                {/* <div>
+                                    <form action='/api/mypage' method='post' target="_blank">
 
-            <form action='/api/mypage' method='post' target="_blank">
-                <BlockNum></BlockNum>
-                <div>Mint started at BlockNum : <input type="text" name="bn"></input></div>
-                <div>Mint price : <input type="text" name="price"></input></div>
-                <input hidden type="text" name="account" value={address} readOnly></input>
-                <button>submit</button>
-            </form>
+                                        <div>Mint started at BlockNum : <input type="text" name="bn"></input></div>
+                                        <div>Mint price : <input type="text" name="price"></input></div>
+                                        <input hidden type="text" name="account" value={address} readOnly></input>
+                                        <button>submit</button>
+                                    </form>
+                                </div> */}
+                            </TabPanel>
+                        )
+                    })
+                }
+            </div>
+
         </div>
 
     )

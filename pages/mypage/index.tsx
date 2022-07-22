@@ -12,7 +12,7 @@ const MyPage: NextPage = () => {
             {context.accountAddress.length > 0 ?
                 <>
                     <MintInfo></MintInfo>
-                    <SearchProject></SearchProject>
+                    
                 </>
                 :
                 <div>Login plz</div>
