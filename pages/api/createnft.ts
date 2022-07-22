@@ -2,6 +2,7 @@
 import sharp from 'sharp';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import mongoClient from '../../lib/mongodb'
+import deploy from '../../lib/deploy'
 require('dotenv').config();
 
 
@@ -140,7 +141,9 @@ const siteURL = req.headers.host;
 
   const myClient = await mongoClient;
 
-  myClient.db('users').collection('')
+  console.log(myObj.symbol);
+  const contractAddress = await deploy(myObj.projectName, myObj.symbol[0]);
+  if(!(await myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({contractAddress : contractAddress, nftName : myObj.projectName})).acknowledged) {res.send({message:'db error'}); return; };
 
   const dbImgItem =
     dataArr.map((e, idx) => {
@@ -171,7 +174,7 @@ const siteURL = req.headers.host;
         description: myObj.description,
         external_url: myObj.external_url,
         image: `${siteURL}/api/fs/${myObj.projectName}/img/${idx}`,
-        name : `${myObj.projectName} #${idx}`,
+        name : `${myObj.symbol[0]}#${idx}`,
         attributes : e.meta
       }
       return metaObj;
@@ -187,7 +190,7 @@ const siteURL = req.headers.host;
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '100mb' // Set desired value here
+      sizeLimit: '6mb' // Set desired value here
     }
   }
 }

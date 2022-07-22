@@ -16,9 +16,10 @@ type dataObject = {
   description?: string,
   external_url?: string,
   projectName?: string,
-  symbol?: string
+  symbol?: Array<string>
 }
 
+declare let klaytn : any;
 
 const MyImg: Function = (mySrc: Uint8Array) => {
   return URL.createObjectURL(
@@ -36,6 +37,8 @@ const CreateNFT: NextPage = () => {
   const [isWaiting, setIsWainting] = useState<Boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
 
+
+
   const handleTextFieldChange = (e: BaseSyntheticEvent, handlesetFuncion: any) => {
     handlesetFuncion(e.target.value);
   }
@@ -51,7 +54,7 @@ const CreateNFT: NextPage = () => {
     setAttrTabArr(newAttrTabArr);
   }
 
-  const handleSend = () => {
+  const handleSend = async () => {
 
     setIsWainting(true);
     dataObj.description = descriptionValue ?? '';
@@ -59,7 +62,7 @@ const CreateNFT: NextPage = () => {
     if (projectName.length < 1) { setIsWainting(false); alert('projectName should have values'); return; }
     if (symbol.length < 1) { setIsWainting(false); alert('projectName should have values'); return; }
     dataObj.projectName = projectName;
-    dataObj.symbol = symbol;
+    dataObj.symbol = [symbol, await klaytn.enable().then((r:any)=>r[0])]
 
 
     let isRight = true;
