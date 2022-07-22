@@ -1,30 +1,45 @@
 import {  Card,  CardContent, CardMedia, Chip, CircularProgress, Divider, TextField, Typography } from "@mui/material";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const SearchProject = () => {
+const SearchProject = (props : any) => {
 
     const [projectName, setProjectName] = useState<string>('');
     const [metaDataArr, setMetaDataArr] = useState<Array<any>>([]);
     const [isWaiting, setIsWainting] = useState<Boolean>(false);
 
 
-    const handleEnter = () => {
+    console.log(props);
+    
+    // if(props.projectName) setProjectName(props.projectName);
+    // projectName.length > 0 ? handleEnter() : null  ;
+
+    useEffect(()=>{
+        if(props.projectName){
         setIsWainting(true);
-        fetch(`/api/fs/${projectName}`, { method: "POST", })
+        fetch(`/api/fs/${props.projectName}`, { method: "POST", })
             .then(r => r.json())
             .then(x => { setIsWainting(false); console.log(x, Object.keys(x.meta), Object.values(x.meta)); setMetaDataArr(Object.values(x.meta)); return x; })
-        // .then(rj => setMetaDataArr(Object.values(rj.meta)))
+        }
+    },[])
 
-    }
+    // const handleEnter = () => {
+        
+    //     setIsWainting(true);
+    //     fetch(`/api/fs/${projectName}`, { method: "POST", })
+    //         .then(r => r.json())
+    //         .then(x => { setIsWainting(false); console.log(x, Object.keys(x.meta), Object.values(x.meta)); setMetaDataArr(Object.values(x.meta)); return x; })
+    //     // .then(rj => setMetaDataArr(Object.values(rj.meta)))
+
+    // }
 
     return (
         <div className="container">
-            <TextField
+            {/* <TextField
                 onChange={(e) => { setProjectName(e.target.value) }}
                 onKeyUp={(e) => { if (e.key === 'Enter') { handleEnter() } }}
                 value={projectName}
-                label="ProjectName" />
+                label="ProjectName" /> */}
             {isWaiting ? <CircularProgress/> : <></>}
             <div className="HorizontalContainer">
                 {metaDataArr.map((metaData, idx) => {

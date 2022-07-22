@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { useRouter } from 'next/router';
 import { ButtonBase } from '@mui/material';
 import { useAppContext } from '../../context/state';
-import MetaMaskLogin from '../MetamaskLogin/MetamaskLogin'
+// import MetaMaskLogin from '../MetamaskLogin/MetamaskLogin'
 import connect from '../KaikasLogin/KaikasLogin'
 import KaikasLogin from '../KaikasLogin/KaikasLogin';
 
