@@ -80,7 +80,7 @@ const MintInfo = () => {
                     <Button variant="outlined" onClick={handleClickOpen}>Mint!</Button>
                     <SimpleDialog
                         open={open}
-                        selectedValue={projectNameArr[(value as number)]}
+                        selectedValue={ {pn : projectNameArr[(value as number)], address }}
                         onClose={handleClose}
                     />
                     {/* <Button>MintStart</Button> */}

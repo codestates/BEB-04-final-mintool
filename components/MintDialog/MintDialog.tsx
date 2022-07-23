@@ -4,7 +4,7 @@ import BlockNum from "../BlockNum/BlockNum";
 
 interface SimpleDialogProps {
     open: boolean;
-    selectedValue: string;
+    selectedValue: {pn:string, address:string};
     onClose: (value: any) => void;
 }
 
@@ -24,7 +24,7 @@ const SimpleDialog = (props: SimpleDialogProps) => {
     };
 
     const handleSubmit = ()=>{
-        fetch('/api/mint',  {method:"POST", body: JSON.stringify({pn : selectedValue ,bn : blockNum, mp: mintPrice}) } ) 
+        fetch('/api/mint',  {method:"POST", body: JSON.stringify({address : selectedValue.address, pn : selectedValue.pn ,bn : blockNum, mp: mintPrice}) } ) 
         .then(r=>r.text())
         .then(console.log)
         onClose(selectedValue);
