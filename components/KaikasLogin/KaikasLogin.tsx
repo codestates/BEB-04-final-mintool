@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 
 const KaikasLogin = () => {
-    const [isKaikas, setIsKaikas] = useState<boolean>((window as any).klaytn ? true : false);
+    const [isKaikas, setIsKaikas] = useState<boolean>(false);
 
 
     const context = useAppContext();
@@ -17,10 +17,12 @@ const KaikasLogin = () => {
 
     useEffect(() => {
         if ((window as any).klaytn) {
+            setIsKaikas(true);
             if ((window as any).klaytn.selectedAddress) {
                 context.changeAccountAddress((window as any).klaytn.selectedAddress);
             }
         }
+    
 
     }, [])
 
@@ -33,8 +35,7 @@ const KaikasLogin = () => {
                     :
                     <Button color="inherit" onClick={clickLogin}>KaikasLogin</Button>
                 :
-                <span>Kaikas needed</span>
-        
+                <span>Kaikas needed</span> 
             }
         </>
     )

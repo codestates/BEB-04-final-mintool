@@ -22,7 +22,7 @@ function TabPanel(props: any) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <div>{children}</div>
                 </Box>
             )}
         </div>
@@ -37,15 +37,17 @@ const MintInfo = () => {
     const [value, setValue] = useState<number | boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
 
+    //Dialog용 handle들
     const handleClickOpen = () => {
+        if(value === false) {alert('please select your nft project'); return;}
         setOpen(true);
     };
 
     const handleClose = (value: string) => {
         setOpen(false);
     };
+    //Dialog 용 handle END
 
-    console.log('hi');
 
     useEffect(() => {
         klaytn.enable()
@@ -71,13 +73,14 @@ const MintInfo = () => {
                 <Tabs value={value} onChange={handleChange}>
 
                     {
-                        projectNameArr.map((e: any) => (<Tab label={e} />))
+                        projectNameArr.map((e: any) => (<Tab key={e} style={{textTransform: 'none'}} label={e} />))
                     }
                 </Tabs>
                 <div className='HorizontalContainer'>
                     <Button variant="outlined" onClick={handleClickOpen}>Mint!</Button>
                     <SimpleDialog
                         open={open}
+                        selectedValue={projectNameArr[(value as number)]}
                         onClose={handleClose}
                     />
                     {/* <Button>MintStart</Button> */}
@@ -85,7 +88,7 @@ const MintInfo = () => {
                 {
                     projectNameArr.map((e: any, idx: number) => {
                         return (
-                            <TabPanel value={value} index={idx}>
+                            <TabPanel key={`${e}+idx`} value={value} index={idx}>
                                 <SearchProject projectName={e} />
                                 {/* <div>
                                     <form action='/api/mypage' method='post' target="_blank">

@@ -8,8 +8,8 @@ export default async function handler(
     res: NextApiResponse
 ) {
     console.log(req.body)
-    const {bn, mp} = JSON.parse(req.body);
-    console.log(bn,mp);
+    const {pn, bn, mp} = JSON.parse(req.body);
+    console.log(pn, bn, mp);
 
     
     res.send({message : 'hi'});
