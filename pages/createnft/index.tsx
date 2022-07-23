@@ -6,6 +6,7 @@ import styles from '../styles/Home.module.css'
 import ImageLoader from '../../components/ImageLoader/ImageLoader'
 import { Button, CircularProgress, TextField, Typography } from '@mui/material'
 import AlertDialog from '../../components/Alert/Alert'
+import { useAppContext } from '../../context/state'
 
 type dataObject = {
   [num: number]: {
@@ -37,6 +38,8 @@ const CreateNFT: NextPage = () => {
   const [isWaiting, setIsWainting] = useState<Boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
 
+
+  const context = useAppContext();
 
 
   const handleTextFieldChange = (e: BaseSyntheticEvent, handlesetFuncion: any) => {
@@ -105,6 +108,9 @@ const CreateNFT: NextPage = () => {
 
 
   return (
+    <>
+    {
+      context?.accountAddress?.length > 0 ?
     <div className='container'>
       <div className='containerCenter'>
         <Typography variant="h2" component="h2">Create NFT</Typography>
@@ -142,6 +148,10 @@ const CreateNFT: NextPage = () => {
       <button onClick={() => { console.log(dataObj) }}>log dataObj</button>
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
+      : 
+      <div>login Plz</div>
+    }
+    </>
   )
 }
 
