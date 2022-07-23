@@ -144,7 +144,7 @@ const siteURL = req.headers.host;
   console.log(myObj.symbol);
   const contractAddress = await deploy(myObj.projectName, myObj.symbol[0]);
   if(!(await myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({contractAddress : contractAddress, nftName : myObj.projectName})).acknowledged) {res.send({message:'db error'}); return; };
-
+  if(!(await myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({contractAddress : contractAddress})).acknowledged) {res.send({message:'db error'}); return; };
   const dbImgItem =
     dataArr.map((e, idx) => {
       const imgObj: { [idx: string]: any } = {};
@@ -181,6 +181,7 @@ const siteURL = req.headers.host;
     })
   const dbres = await myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem);
 
+  
   if(dbres.acknowledged) {res.send({message : true}); return;}
   res.send({message : false});
 
