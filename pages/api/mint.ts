@@ -15,8 +15,8 @@ export default async function handler(
     // DB에서 유저에서 업데이트 + users.
     const myClient = await promiseClient;
     try {
-        if ((await myClient.db('users').collection(address).updateOne({ nftName: pn }, { $set: { mintTime: bn, mintPrice: mp } })).acknowledged) {
-            if ((await myClient.db('mint').collection('mintCollections').insertOne({ projectName: pn, mintPrice : mp })).acknowledged) {
+        if ((await myClient.db('users').collection(address).updateOne({ nftName: pn }, { $set: { mintBn: bn, mintPrice: mp } })).acknowledged) {
+            if ((await myClient.db('mint').collection('mintCollections').insertOne({ projectName: pn, mintPrice : mp, mintBn : bn })).acknowledged) {
                 res.send({ message: true });
                 return;
             }
