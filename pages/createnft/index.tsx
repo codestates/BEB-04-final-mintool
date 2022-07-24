@@ -145,7 +145,7 @@ const CreateNFT: NextPage = () => {
       <br />
       <Button variant="contained" onClick={handleSend}>send</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
-      <button onClick={() => { console.log(dataObj) }}>log dataObj</button>
+      {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
       : 
