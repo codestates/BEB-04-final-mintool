@@ -77,31 +77,39 @@ const CreateNFT: NextPage = () => {
     })
     if (!isRight) { alert("Image input is not right"); setIsWainting(false); return; }
 
-    const promiseArr = Object.keys(dataObj).slice(0, -4).map(myKey => {
+    // const promiseArr = Object.keys(dataObj).slice(0, -4).map(myKey => {
 
-      const objKey = parseInt(myKey);
-      const a: Array<Promise<Uint8Array>> = dataObj[objKey].fileArr.map(file => {
-        if (file.arrayBuffer) return (file as File).arrayBuffer().then(ab => new Uint8Array(ab));
-        return file;
-      })
-      console.log("a : ", a);
-      return Promise.all(a)
-        .then((x: Array<Uint8Array>) => {
+    //   const objKey = parseInt(myKey);
+    //   const a: Array<Promise<Uint8Array>> = dataObj[objKey].fileArr.map(file => {
+    //     if (file.arrayBuffer) return (file as File).arrayBuffer().then(ab => new Uint8Array(ab));
+    //     return file;
+    //   })
+    //   console.log("a : ", a);
+    //   return Promise.all(a)
+    //     .then((x: Array<Uint8Array>) => {
 
-          dataObj[objKey].fileArr = x;
-        })
-    })
-    console.log("promiseArr : ", promiseArr);
+    //       dataObj[objKey].fileArr = x;
+    //     })
+    // })
+    // console.log("promiseArr : ", promiseArr);
 
-    Promise.all(promiseArr)
-      // .then(x=> {dataObj.description = descriptionValue; dataObj.external_url=external_urlValue; return 1;} )
-      .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) })
-        .then(w => w.json())
-        .then(sres => {
-          setIsWainting(false);
-          if (sres.message) { alert("NFT creation done!"); }
-          else { alert("error") }
-        }))
+    const myForm = new FormData();
+    for(let i=0; dataObj["1"].fileArr.length>i; i++){
+      myForm.append(i.toString(),dataObj["1"].fileArr[i],dataObj["1"].fileArr[i].name);
+    }
+    fetch('/api/createnftbusboy',{method:"POST", body:myForm})
+    .then(r=>r.json())
+    .then(console.log);
+
+    // Promise.all(promiseArr)
+    //   // .then(x=> {dataObj.description = descriptionValue; dataObj.external_url=external_urlValue; return 1;} )
+    //   .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) })
+    //     .then(w => w.json())
+    //     .then(sres => {
+    //       setIsWainting(false);
+    //       if (sres.message) { alert("NFT creation done!"); }
+    //       else { alert("error") }
+    //     }))
   }
 
 
@@ -145,7 +153,7 @@ const CreateNFT: NextPage = () => {
       <br />
       <Button variant="contained" onClick={handleSend}>send</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
-      {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
+      <button onClick={() => { console.log(dataObj) }}>log dataObj</button>
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
       : 

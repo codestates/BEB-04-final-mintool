@@ -75,6 +75,8 @@ const siteURL = req.headers.host;
   }
   else { res.send({ message: 'received data is not right' }); return; }
 
+  res.send({message: 'ok'});
+
   // 
   for (let index of Object.keys(myObj).slice(1, -4)) {
 
@@ -112,7 +114,7 @@ const siteURL = req.headers.host;
       }
       dataArr = tmpArr;
     }
-    else { res.send({ message: 'received data is not right' }); return; }
+    else { console.log({ message: 'received data is not right' }); return; }
   }
   console.log('dataArr metadata is : ', dataArr.map(e => e.meta));
   console.log('dataArr img is : ', dataArr.map(e => e.imgBuffer.length));
@@ -143,8 +145,8 @@ const siteURL = req.headers.host;
 
   console.log(myObj.symbol);
   const contractAddress = await deploy(myObj.projectName, myObj.symbol[0]);
-  if(!(await myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({contractAddress : contractAddress, nftName : myObj.projectName})).acknowledged) {res.send({message:'db error'}); return; };
-  if(!(await myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({contractAddress : contractAddress})).acknowledged) {res.send({message:'db error'}); return; };
+  if(!(await myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({contractAddress : contractAddress, nftName : myObj.projectName})).acknowledged) {console.log({message:'db error'}); return; };
+  if(!(await myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({contractAddress : contractAddress})).acknowledged) {console.log({message:'db error'}); return; };
   const dbImgItem =
     dataArr.map((e, idx) => {
       const imgObj: { [idx: string]: any } = {};
@@ -182,8 +184,8 @@ const siteURL = req.headers.host;
   const dbres = await myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem);
 
   
-  if(dbres.acknowledged) {res.send({message : true}); return;}
-  res.send({message : false});
+  if(dbres.acknowledged) {console.log({message : true}); return;}
+  console.log({message : false});
 
 }
 
@@ -191,7 +193,7 @@ const siteURL = req.headers.host;
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '6mb' // Set desired value here
+      sizeLimit: '4.5mb' // Set desired value here
     }
   }
 }
