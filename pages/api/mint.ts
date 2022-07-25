@@ -23,7 +23,7 @@ export default async function handler(
         if ((await myClient.db('mint').collection('mintCollections').insertOne({ projectName: pn, mintPrice: mp, mintBn: bn })).acknowledged) {
             const contractAddress = (await myClient.db('users').collection(address).find({ nftName: pn }).toArray())[0].contractAddress;
             // console.log(`${url}/api/fs/${pn}/meta`,address,bn,mp,ownerAddress)
-            await setPublicMint(`${url}/api/fs/${pn}/meta/`, contractAddress, bn, mp, address,tn);
+            await setPublicMint(`${url}/api/fs/${pn}/meta/`, contractAddress, bn, mp+'000000000000000000', address,tn);
             if((await myClient.db('users').collection(address).deleteOne({nftName : pn})).acknowledged){
                 res.send({ message: true });
                 return;
