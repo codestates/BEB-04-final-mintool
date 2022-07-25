@@ -77,39 +77,29 @@ const CreateNFT: NextPage = () => {
     })
     if (!isRight) { alert("Image input is not right"); setIsWainting(false); return; }
 
-    // const promiseArr = Object.keys(dataObj).slice(0, -4).map(myKey => {
-
-    //   const objKey = parseInt(myKey);
-    //   const a: Array<Promise<Uint8Array>> = dataObj[objKey].fileArr.map(file => {
-    //     if (file.arrayBuffer) return (file as File).arrayBuffer().then(ab => new Uint8Array(ab));
-    //     return file;
-    //   })
-    //   console.log("a : ", a);
-    //   return Promise.all(a)
-    //     .then((x: Array<Uint8Array>) => {
-
-    //       dataObj[objKey].fileArr = x;
-    //     })
-    // })
-    // console.log("promiseArr : ", promiseArr);
 
     const myForm = new FormData();
-    for(let i=0; dataObj["1"].fileArr.length>i; i++){
-      myForm.append(i.toString(),dataObj["1"].fileArr[i],dataObj["1"].fileArr[i].name);
-    }
+    const k = Object.keys(dataObj);
+    console.log(k);
+    k
+    .slice(0,-4)
+    .forEach((key: string, i)=>{
+      const k = parseInt(key);
+      dataObj[k].fileArr.forEach((fileObj : any)=>
+        myForm.append(key, fileObj, fileObj.name)
+      )
+    })
+    myForm.append("myObj", JSON.stringify(dataObj));
+
     fetch('/api/createnftbusboy',{method:"POST", body:myForm})
     .then(r=>r.json())
-    .then(console.log);
+    .then(messageObj=>{
+      setIsWainting(false);
+      if(messageObj.message === "ok") { alert("nft creation done!")}
+      else { alert("error")}
+    });
 
-    // Promise.all(promiseArr)
-    //   // .then(x=> {dataObj.description = descriptionValue; dataObj.external_url=external_urlValue; return 1;} )
-    //   .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) })
-    //     .then(w => w.json())
-    //     .then(sres => {
-    //       setIsWainting(false);
-    //       if (sres.message) { alert("NFT creation done!"); }
-    //       else { alert("error") }
-    //     }))
+
   }
 
 
