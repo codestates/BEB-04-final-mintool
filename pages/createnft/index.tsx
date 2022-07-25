@@ -123,23 +123,24 @@ const CreateNFT: NextPage = () => {
           <TextField label="external_url" multiline onChange={(e) => { handleTextFieldChange(e, setExternal_urlValue) }} value={external_urlValue}></TextField>
         </div>
 
-        <Typography variant="h4" component="div">Bottom layer</Typography>
+        <Typography variant="h4" component="div">Layer 0</Typography>
         <ImageLoader myKey={0} handleSetDataObj={handleSetDataObj}></ImageLoader>
       </div>
       <br />
 
-      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
+      
       <br />
       {
-        attrTabArr.slice(1).map(e => {
+        attrTabArr.slice(1).map((e,idx) => {
           return (
             <div key={e} className="containerCenter">
-              <Typography variant="h6" component="div">Bottom layer</Typography>
+              <Typography variant="h6" component="div">Layer {idx+1}</Typography>
               <ImageLoader handleDel={handleDel} myKey={e} handleSetDataObj={handleSetDataObj}></ImageLoader>
             </div>
           )
         })
       }
+      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
 
       <br />
       <Button variant="contained" onClick={handleSend}>send</Button>

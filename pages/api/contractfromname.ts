@@ -16,7 +16,9 @@ export default async function handler(
     const myClient = await promiseClient;
     try {
         const myContract = (await myClient.db(nftName).collection('contract').find().toArray())[0].contractAddress;
-        res.send({contract : myContract});
+        const {mintPrice, mintBn} = (await myClient.db('mint').collection('mintCollections').find({projectName: nftName}).toArray())[0];
+        console.log(mintPrice, mintBn);
+        res.send({contract : myContract, mintPrice, mintBn});
         
     } catch(e) {console.log(e); res.status(500).send('error'); return;}
 
