@@ -17,7 +17,7 @@ const mintpage = ()=>{
     return (
         <div className="container">
             mint page
-            <div>
+            <div className='HorizontalContainer'>
                
                 {
                 nftNameArr.map(e=> <MintContainer key={e} nftName={e} />)
