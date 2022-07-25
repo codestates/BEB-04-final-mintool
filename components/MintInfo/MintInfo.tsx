@@ -36,6 +36,7 @@ const MintInfo = () => {
     const [projectNameArr, setProjectNameArr] = useState<Array<string>>([]);
     const [value, setValue] = useState<number | boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
+    const [totalNftNum, setTotalNftNum] = useState<number>(0);
 
     //Dialog용 handle들
     const handleClickOpen = () => {
@@ -80,16 +81,16 @@ const MintInfo = () => {
                     <Button variant="outlined" onClick={handleClickOpen}>Mint!</Button>
                     <SimpleDialog
                         open={open}
-                        selectedValue={ {pn : projectNameArr[(value as number)], address }}
+                        selectedValue={ {pn : projectNameArr[(value as number)], address, tn:totalNftNum }}
                         onClose={handleClose}
                     />
-                    {/* <Button>MintStart</Button> */}
+                    <Button onClick={()=>{console.log(totalNftNum)}}>totalNFTNUm</Button>
                 </div>
                 {
                     projectNameArr.map((e: any, idx: number) => {
                         return (
                             <TabPanel key={`${e}+idx`} value={value} index={idx}>
-                                <SearchProject projectName={e} />
+                                <SearchProject projectName={e} cb={(n:number)=>{setTotalNftNum(n)}} />
                                 {/* <div>
                                     <form action='/api/mypage' method='post' target="_blank">
 

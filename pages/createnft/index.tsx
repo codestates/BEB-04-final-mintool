@@ -77,31 +77,30 @@ const CreateNFT: NextPage = () => {
     })
     if (!isRight) { alert("Image input is not right"); setIsWainting(false); return; }
 
-    const promiseArr = Object.keys(dataObj).slice(0, -4).map(myKey => {
 
-      const objKey = parseInt(myKey);
-      const a: Array<Promise<Uint8Array>> = dataObj[objKey].fileArr.map(file => {
-        if (file.arrayBuffer) return (file as File).arrayBuffer().then(ab => new Uint8Array(ab));
-        return file;
-      })
-      console.log("a : ", a);
-      return Promise.all(a)
-        .then((x: Array<Uint8Array>) => {
-
-          dataObj[objKey].fileArr = x;
-        })
+    const myForm = new FormData();
+    const k = Object.keys(dataObj);
+    console.log(k);
+    k
+    .slice(0,-4)
+    .forEach((key: string, i)=>{
+      const k = parseInt(key);
+      dataObj[k].fileArr.forEach((fileObj : any)=>
+        myForm.append(key, fileObj, fileObj.name)
+      )
     })
-    console.log("promiseArr : ", promiseArr);
+    myForm.append("myObj", JSON.stringify(dataObj));
 
-    Promise.all(promiseArr)
-      // .then(x=> {dataObj.description = descriptionValue; dataObj.external_url=external_urlValue; return 1;} )
-      .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) })
-        .then(w => w.json())
-        .then(sres => {
-          setIsWainting(false);
-          if (sres.message) { alert("NFT creation done!"); }
-          else { alert("error") }
-        }))
+    fetch('/api/createnftbusboy',{method:"POST", body:myForm})
+    .then(r=>r.json())
+    .then(messageObj=>{
+      setIsWainting(false);
+      // console.log(messageObj);
+      if(messageObj.message === true) { alert("nft creation done!")}
+      else { alert("error")}
+    });
+
+
   }
 
 
@@ -124,28 +123,29 @@ const CreateNFT: NextPage = () => {
           <TextField label="external_url" multiline onChange={(e) => { handleTextFieldChange(e, setExternal_urlValue) }} value={external_urlValue}></TextField>
         </div>
 
-        <Typography variant="h4" component="div">Bottom layer</Typography>
+        <Typography variant="h4" component="div">Layer 0</Typography>
         <ImageLoader myKey={0} handleSetDataObj={handleSetDataObj}></ImageLoader>
       </div>
       <br />
 
-      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
+      
       <br />
       {
-        attrTabArr.slice(1).map(e => {
+        attrTabArr.slice(1).map((e,idx) => {
           return (
             <div key={e} className="containerCenter">
-              <Typography variant="h6" component="div">Bottom layer</Typography>
+              <Typography variant="h6" component="div">Layer {idx+1}</Typography>
               <ImageLoader handleDel={handleDel} myKey={e} handleSetDataObj={handleSetDataObj}></ImageLoader>
             </div>
           )
         })
       }
+      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
 
       <br />
       <Button variant="contained" onClick={handleSend}>send</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
-      {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
+      <button onClick={() => { console.log(dataObj) }}>log dataObj</button>
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
       : 
