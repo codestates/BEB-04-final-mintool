@@ -2,6 +2,7 @@
 import sharp from 'sharp';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import mongoClient from '../../lib/mongodb'
+import deploy from '../../lib/deploy'
 require('dotenv').config();
 
 
@@ -18,6 +19,7 @@ interface reqBodyObject {
   description: simpleParsedObj
   external_url: simpleParsedObj
   projectName : simpleParsedObj
+  symbol : simpleParsedObj
 }
 
 function isIndexSignaturesOfParedObj(arg: any): arg is indexSignaturesOfParedObj {
@@ -53,6 +55,9 @@ const siteURL = req.headers.host;
   // let dataArr: { imgBuffer: Buffer | Uint8Array, meta: { trait_type: string, value: string }[] }[] = [];
   let dataArr: Array<{ imgBuffer: Uint8Array, meta: Array<{ trait_type: string, value: string }> }> = [];
 
+  if(!myObj.symbol) { console.log('symbol error'); res.status(400).send({message : "symbol not found"}); return;}
+  
+
   if (isIndexSignaturesOfParedObj(myObj['0'])) {
     dataArr = await Promise.all(
       myObj['0'].fileArr.map(async (file, idx) => {
@@ -71,7 +76,7 @@ const siteURL = req.headers.host;
   else { res.send({ message: 'received data is not right' }); return; }
 
   // 
-  for (let index of Object.keys(myObj).slice(1, -3)) {
+  for (let index of Object.keys(myObj).slice(1, -4)) {
 
     if (isIndexSignaturesOfParedObj(myObj[index])) {
       const indexedObj = myObj[index] as indexSignaturesOfParedObj;
@@ -136,6 +141,10 @@ const siteURL = req.headers.host;
 
   const myClient = await mongoClient;
 
+  console.log(myObj.symbol);
+  const contractAddress = await deploy(myObj.projectName, myObj.symbol[0]);
+  if(!(await myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({contractAddress : contractAddress, nftName : myObj.projectName})).acknowledged) {res.send({message:'db error'}); return; };
+  if(!(await myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({contractAddress : contractAddress})).acknowledged) {res.send({message:'db error'}); return; };
   const dbImgItem =
     dataArr.map((e, idx) => {
       const imgObj: { [idx: string]: any } = {};
@@ -165,13 +174,14 @@ const siteURL = req.headers.host;
         description: myObj.description,
         external_url: myObj.external_url,
         image: `${siteURL}/api/fs/${myObj.projectName}/img/${idx}`,
-        name : `${myObj.projectName} #${idx}`,
+        name : `${myObj.symbol[0]}#${idx}`,
         attributes : e.meta
       }
       return metaObj;
     })
   const dbres = await myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem);
 
+  
   if(dbres.acknowledged) {res.send({message : true}); return;}
   res.send({message : false});
 
@@ -181,7 +191,7 @@ const siteURL = req.headers.host;
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '100mb' // Set desired value here
+      sizeLimit: '6mb' // Set desired value here
     }
   }
 }
