@@ -95,7 +95,8 @@ const CreateNFT: NextPage = () => {
     .then(r=>r.json())
     .then(messageObj=>{
       setIsWainting(false);
-      if(messageObj.message === "ok") { alert("nft creation done!")}
+      // console.log(messageObj);
+      if(messageObj.message === true) { alert("nft creation done!")}
       else { alert("error")}
     });
 

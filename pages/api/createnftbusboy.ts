@@ -1,4 +1,3 @@
-
 import promiseClient from '../../lib/mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import busboy from 'busboy';
@@ -103,7 +102,8 @@ export default async function handler(
           const meta = { trait_type: name, value: val };
 
           //image part
-          const aImg : any = new Uint8Array(Object.values(file));
+          // const aImg : any = new Uint8Array(Object.values(file));
+          const aImg : any = file;
 
           return { imgBuffer: aImg, meta: [meta] };
         })
@@ -111,7 +111,7 @@ export default async function handler(
     }
     else { res.send({ message: 'received data is not right' }); return; }
 
-    res.send({ message: 'ok' });
+    // res.send({ message: 'ok' });
 
     // 
     for (let index of Object.keys(myObj).slice(1, -4)) {
@@ -186,7 +186,7 @@ export default async function handler(
 
     if (dbres.acknowledged) { res.send({ message: true }); return; }
     
-    res.send({message : "ok"})
+    res.send({message : "db error"})
 
 
 
