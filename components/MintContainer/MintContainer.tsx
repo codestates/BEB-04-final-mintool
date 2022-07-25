@@ -1,5 +1,7 @@
 import { Button, Card, CardContent, CardHeader, CardMedia } from "@mui/material";
 import { useEffect, useState } from "react";
+import publicMint from '../../lib/publicMint'
+import { useAppContext } from '../../context/state'
 
 
 declare let caver : any;
@@ -8,7 +10,7 @@ const MintContainer = (props: { nftName: string }) => {
     const [contract, setContract] = useState<string>('');
     const [blockNum, setBlockNum] = useState<string>('0');
     const [datas, setDatas] = useState<any>({});
-    
+    const context = useAppContext();
 
     useEffect(() => {
         const myTimer = setInterval(()=>{caver.klay.getBlockNumber().then((r:string)=>setBlockNum(r))},1000);
@@ -43,7 +45,7 @@ const MintContainer = (props: { nftName: string }) => {
                                 <div>Current Block : {blockNum}</div>
                                 <div>Mint start BlockNum : {datas.mintBn}</div>
                                 <div>price : {datas.mintPrice}</div>
-                                <Button>Mint</Button>
+                                <Button onClick={()=>{publicMint(context.accountAddress,contract)}}>Mint</Button>
                             </div>
                         </CardContent>
 
