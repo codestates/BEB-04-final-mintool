@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { useEffect, useState } from "react";
 
 const SearchProject = (props : any) => {
-
+    // console.group(props.cb);
     const [projectName, setProjectName] = useState<string>('');
     const [metaDataArr, setMetaDataArr] = useState<Array<any>>([]);
     const [isWaiting, setIsWainting] = useState<Boolean>(false);
@@ -19,7 +19,8 @@ const SearchProject = (props : any) => {
         setIsWainting(true);
         fetch(`/api/fs/${props.projectName}`, { method: "POST", })
             .then(r => r.json())
-            .then(x => { setIsWainting(false); console.log(x, Object.keys(x.meta), Object.values(x.meta)); setMetaDataArr(Object.values(x.meta)); return x; })
+            .then(x => { setIsWainting(false); setMetaDataArr(Object.values(x.meta)); return x; })
+            .then(n=>{if(props.cb) {props.cb(Object.keys(n.meta).length)}})
         }
     },[])
 
