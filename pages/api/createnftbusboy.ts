@@ -114,7 +114,7 @@ export default async function handler(
 
 
     for (let index of Object.keys(myObj).slice(1, -4)) {
-
+      console.log(myObj[index]);
       if (isIndexSignaturesOfParedObj(myObj[index])) {
         const indexedObj = myObj[index] as indexSignaturesOfParedObj;
         const indexAttrName = indexedObj.AttrName;
