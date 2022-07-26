@@ -41,9 +41,9 @@ const MintContainer = (props: { nftName: string }) => {
                         />
                         <CardContent>
                             <div style={{display : 'flex', flexDirection:'column'}}>
-                                <div>contractName : {contract.slice(0,6)+"..."+contract.slice(-5,-1)}</div>
-                                <div>Current Block : {blockNum}</div>
-                                <div>Mint start BlockNum : {datas.mintBn}</div>
+                                <div>contract  Name : {contract.slice(0,6)+"..."+contract.slice(-5,-1)}</div>
+                                <div>Current  Block : {blockNum}</div>
+                                <div>MintstartBlock : {datas.mintBn}</div>
                                 <div>price : {datas.mintPrice}</div>
                                 <Button onClick={()=>{console.log(context.accountAddress); publicMint(context.accountAddress,contract)}}>Mint</Button>
                             </div>

@@ -45,7 +45,7 @@ const SearchProject = (props : any) => {
             <div className="HorizontalContainer">
                 {metaDataArr.map((metaData, idx) => {
                     const metaDataObj: any = metaData.object ?? null;
-                    const imgSrc = `http://${metaDataObj.image}`;
+                    const imgSrc = `${metaDataObj.image}`;
                     return (
                         <div style={{ margin: '5px' }} key={metaDataObj.name}>
                             <Card>

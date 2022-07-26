@@ -82,7 +82,9 @@ export default async function handler(
 
     if (await myClient.db(`${myObj.projectName}`).collection('contract').find({}).toArray().then(r => r.length > 0)) { res.send({ message: 'nft already exists' }); return; }
 
-    const siteURL = req.headers.host;
+    //site url : 마지막에 슬래시 없이 진행할 것.
+    // const siteURL = req.headers.host;
+    const siteURL = "https://beb-04-final-mintool.vercel.app"
 
 
 
