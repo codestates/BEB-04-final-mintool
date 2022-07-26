@@ -67,21 +67,22 @@ const CreateNFT: NextPage = () => {
     dataObj.projectName = projectName;
     dataObj.symbol = [symbol, await klaytn.enable().then((r:any)=>r[0])]
 
-
+    const objKey = Object.keys(dataObj);
     let isRight = true;
-    Object.keys(dataObj).slice(0, -4).forEach(k => {
+    if(objKey.length === 4) isRight=false;
+    if( objKey.filter(e=>e==="0").length === 0 ) isRight=false;
+    objKey.slice(0, -4).forEach(k => {
       const kNumber = parseInt(k);
       if (dataObj[kNumber].fileArr.length < 1) isRight = false;
       if (dataObj[kNumber].fileArr.length !== dataObj[kNumber].values.length) isRight = false;
       if (dataObj[kNumber].AttrName === undefined) isRight = false;
     })
+
     if (!isRight) { alert("Image input is not right"); setIsWainting(false); return; }
 
 
     const myForm = new FormData();
-    const k = Object.keys(dataObj);
-    console.log(k);
-    k
+    objKey
     .slice(0,-4)
     .forEach((key: string, i)=>{
       const k = parseInt(key);
@@ -98,7 +99,11 @@ const CreateNFT: NextPage = () => {
       // console.log(messageObj);
       if(messageObj.message === true) { alert("nft creation done!")}
       else { alert("error")}
-    });
+    })
+    .catch(er=>{
+      setIsWainting(false);
+      alert("error message : " + er);
+    })
 
 
   }
@@ -140,16 +145,16 @@ const CreateNFT: NextPage = () => {
           )
         })
       }
-      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
+      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>add Tab</Button>
 
       <br />
-      <Button variant="contained" onClick={handleSend}>send</Button>
+      <Button variant="contained" onClick={handleSend} disabled={isWaiting ? true : false} >Create Contract</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
-      <button onClick={() => { console.log(dataObj) }}>log dataObj</button>
+      {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
       : 
-      <div>login Plz</div>
+      <div>Please Connect your kaikas wallet.</div>
     }
     </>
   )
