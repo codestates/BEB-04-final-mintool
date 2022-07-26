@@ -5,7 +5,7 @@ import { useAppContext } from '../../context/state';
 
 interface SimpleDialogProps {
     open: boolean;
-    selectedValue: {pn:string, address:string, tn:number};
+    selectedValue: {pn:string, address:string, tn:number, ca:string};
     onClose: (value: any) => void;
 }
 
@@ -27,7 +27,7 @@ const SimpleDialog = (props: SimpleDialogProps) => {
 
     const handleSubmit = ()=>{
         setIsWait(true);
-        fetch('/api/mint',  {method:"POST", body: JSON.stringify({address : selectedValue.address, pn : selectedValue.pn ,bn : blockNum, mp: mintPrice, tn : selectedValue.tn}) } ) 
+        fetch('/api/mint',  {method:"POST", body: JSON.stringify({address : selectedValue.address, pn : selectedValue.pn ,bn : blockNum, mp: mintPrice, tn : selectedValue.tn, ca: selectedValue.ca}) } ) 
         .then(r=>r.text())
         .then(console.log)
         .then(c=>setIsWait(false))
