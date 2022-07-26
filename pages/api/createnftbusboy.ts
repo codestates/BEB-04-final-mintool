@@ -75,8 +75,9 @@ export default async function handler(
 
 
     //site url : 마지막에 슬래시 없이 진행할 것.
-    // const siteURL = req.headers.host;
-    const siteURL = "https://beb-04-final-mintool.vercel.app"
+    const siteURL = `http://${req.headers.host}`;
+    console.log(siteURL);
+    // const siteURL = "https://beb-04-final-mintool.vercel.app"
     let dataArr: Array<{ imgBuffer: Promise<Uint8Array>, meta: Array<{ trait_type: string, value: string }> }> = [];
     type DataArr = { imgBuffer: Buffer | Uint8Array, meta: { trait_type: string, value: string }[] }[];
 

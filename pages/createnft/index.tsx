@@ -67,21 +67,22 @@ const CreateNFT: NextPage = () => {
     dataObj.projectName = projectName;
     dataObj.symbol = [symbol, await klaytn.enable().then((r:any)=>r[0])]
 
-
+    const objKey = Object.keys(dataObj);
     let isRight = true;
-    Object.keys(dataObj).slice(0, -4).forEach(k => {
+    if(objKey.length === 4) isRight=false;
+    if( objKey.filter(e=>e==="0").length === 0 ) isRight=false;
+    objKey.slice(0, -4).forEach(k => {
       const kNumber = parseInt(k);
       if (dataObj[kNumber].fileArr.length < 1) isRight = false;
       if (dataObj[kNumber].fileArr.length !== dataObj[kNumber].values.length) isRight = false;
       if (dataObj[kNumber].AttrName === undefined) isRight = false;
     })
+
     if (!isRight) { alert("Image input is not right"); setIsWainting(false); return; }
 
 
     const myForm = new FormData();
-    const k = Object.keys(dataObj);
-    console.log(k);
-    k
+    objKey
     .slice(0,-4)
     .forEach((key: string, i)=>{
       const k = parseInt(key);
