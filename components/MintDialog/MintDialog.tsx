@@ -43,7 +43,7 @@ const SimpleDialog = (props: SimpleDialogProps) => {
                 <div className="containerCenter marginChild" >
                     <BlockNum />
                     <TextField label="BlockNum" onChange={(e)=>{setBlockNum(e.target.value)}} value={blockNum}></TextField>
-                    <TextField label="MintPrice" onChange={(e)=>{setMintPrice(e.target.value)}} value={`${mintPrice}(klay)`}></TextField>
+                    <TextField label="MintPrice" onChange={(e)=>{setMintPrice(e.target.value)}} value={`${mintPrice}`}></TextField>
                     <Button variant="contained" onClick={handleSubmit} disabled={isWait}>submit</Button>
                     {isWait ? <CircularProgress/> : <></>}
                 </div>

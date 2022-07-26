@@ -25,7 +25,7 @@ const MintContainer = (props: { nftName: string }) => {
         fetch('/api/contractfromname', { method: "POST", body: props.nftName })
             .then(r => r.json())
             .then(obj => { setContract(obj.contract); setDatas(obj)})
-            .then(r=>console.log("Data is ",datas))
+            // .then(r=>console.log("Data is ",datas))
         return ()=>{
             if(window.caver){
                 clearInterval( myTimer );
@@ -59,7 +59,7 @@ const MintContainer = (props: { nftName: string }) => {
                         </CardContent>
                                 <Divider></Divider>
                                 <div className="containerCenter">
-                                    <Button onClick={ ()=>{console.log(context.accountAddress); publicMint(context.accountAddress,contract)} }>Mint</Button>
+                                    <Button onClick={ ()=>{console.log("userwallet and contract",context.accountAddress,contract); publicMint(context.accountAddress,contract)} }>Mint</Button>
                                 </div>
 
                     </Card>

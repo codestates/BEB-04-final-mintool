@@ -12,7 +12,7 @@ const mintpage = () => {
         fetch('/api/mintpage')
             .then(r => r.json())
             .then(obj => obj.mint)
-            .then(arr => { console.log(arr); setNftNameArr(arr); setIsLoading(false) })
+            .then(arr => { setNftNameArr(arr); setIsLoading(false) })
     }, [])
 
 
