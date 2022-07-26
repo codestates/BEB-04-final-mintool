@@ -1,5 +1,5 @@
 // import Caver from 'caver-js'
-import { Tab, Tabs, Box, Typography, Button, Dialog, DialogTitle, TextField } from '@mui/material';
+import { Tab, Tabs, Box, Typography, Button, Dialog, DialogTitle, TextField, CircularProgress } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import SearchProject from '../SearchProject/SearchProject';
 import BlockNum from '../BlockNum/BlockNum'
@@ -41,6 +41,8 @@ const MintInfo = () => {
     const [contractAddressArr, setContractAddressArr] = useState<Array<string>>([]);
     const [isMintedArr, setIsMintedArr] = useState<Array<boolean>>([]);
 
+    const [isLoading, setIsLoading] =useState<boolean>(true);
+
     //Dialog용 handle들
     const handleClickOpen = () => {
         if (value === false) { alert('please select your nft project'); return; }
@@ -59,7 +61,8 @@ const MintInfo = () => {
             .then((myAddress: string) => {
                 fetch('/api/usernftnames', { method: 'POST', body: JSON.stringify({ address: myAddress }) })
                     .then(r => r.json())
-                    .then(nftObj => { setProjectNameArr(nftObj.nftNames); setContractAddressArr(nftObj.contractAddress); setIsMintedArr(nftObj.isMinted); });
+                    .then(nftObj => { setProjectNameArr(nftObj.nftNames); setContractAddressArr(nftObj.contractAddress); setIsMintedArr(nftObj.isMinted); })
+                    .then(z=>setIsLoading(false))
             })
         //fetch에서 address만 보낼 경우, 문제가 발생하긴한다. (보안이슈) jwt 사용해보자 나중에.
     }, [])
@@ -81,7 +84,15 @@ const MintInfo = () => {
                     }
                 </Tabs>
                 <div className='HorizontalContainer'>
-
+                    <>{
+                        projectNameArr.length === 0 ? 
+                        isLoading ?
+                        <CircularProgress></CircularProgress>
+                        :
+                        <div><div>There's no contarct at all.</div> <div>please make NFT contract from <code>CREATENFT</code> tab </div></div> 
+                        : 
+                        <></>
+                    }</>
                     <SimpleDialog
                         open={open}
                         selectedValue={{ pn: projectNameArr[(value as number)], address, tn: totalNftNum, ca: contractAddressArr[(value as number)] }}
