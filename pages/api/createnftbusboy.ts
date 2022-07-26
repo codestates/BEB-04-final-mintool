@@ -84,7 +84,7 @@ export default async function handler(
 
 
     const myClient = await promiseClient;
-
+    await bbPromise;
     const myObj: reqBodyObject = dataObj;
     
     if(await myClient.db(`${myObj.projectName}`).collection('contract').find({}).toArray().then(r => r.length > 0)) { res.send({ message: 'nft already exists' }); return; }
@@ -114,7 +114,7 @@ export default async function handler(
 
 
     for (let index of Object.keys(myObj).slice(1, -4)) {
-      console.log(myObj[index]);
+      // console.log(myObj[index]);
       if (isIndexSignaturesOfParedObj(myObj[index])) {
         const indexedObj = myObj[index] as indexSignaturesOfParedObj;
         const indexAttrName = indexedObj.AttrName;
