@@ -8,7 +8,7 @@ type simpleParsedObj = { [idx: string]: string }
 type indexSignaturesOfParedObj = {
   AttrName: string,
   values: Array<string>,
-  fileArr: Array<{ [idx: string]: number }>
+  fileArr: Array<Uint8Array>
 }
 
 
@@ -36,7 +36,7 @@ export default async function handler(
     const ret: any[] = [];
     let dataObj: any = {};
 
-    const isDone: boolean = await new Promise((res, rej) => {
+    const bbPromise =new Promise((res, rej) => {
       try {
         bb.on('file', (name, file, info) => {
           const { filename, encoding, mimeType } = info;
@@ -73,49 +73,46 @@ export default async function handler(
       } catch (e) { rej(false) }
     })
 
-    if (!isDone) { res.send({ message: 'bb error' }); return; }
+
+    //site url : 마지막에 슬래시 없이 진행할 것.
+    // const siteURL = req.headers.host;
+    const siteURL = "https://beb-04-final-mintool.vercel.app"
+    let dataArr: Array<{ imgBuffer: Promise<Uint8Array>, meta: Array<{ trait_type: string, value: string }> }> = [];
+    type DataArr = { imgBuffer: Buffer | Uint8Array, meta: { trait_type: string, value: string }[] }[];
+
+    
 
 
     const myClient = await promiseClient;
 
     const myObj: reqBodyObject = dataObj;
+    
+    if(await myClient.db(`${myObj.projectName}`).collection('contract').find({}).toArray().then(r => r.length > 0)) { res.send({ message: 'nft already exists' }); return; }
+    
+    deploy(myObj.projectName, myObj.symbol[0]).then(contractAddress=>{
+      myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({ contractAddress: contractAddress, nftName: myObj.projectName }).then(result=>{if(!result.acknowledged){throw "error db"} })
+      myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({ contractAddress: contractAddress }).then(result=>{if(!result.acknowledged){throw "error db"} })
+    })
 
-    if (await myClient.db(`${myObj.projectName}`).collection('contract').find({}).toArray().then(r => r.length > 0)) { res.send({ message: 'nft already exists' }); return; }
-
-    //site url : 마지막에 슬래시 없이 진행할 것.
-    // const siteURL = req.headers.host;
-    const siteURL = "https://beb-04-final-mintool.vercel.app"
-
-
-
-    const backgroundImg = new Uint8Array(Object.values(myObj['0'].fileArr[0]));
-
-    let dataArr: Array<{ imgBuffer: Uint8Array, meta: Array<{ trait_type: string, value: string }> }> = [];
 
     if (!myObj.symbol) { console.log('symbol error'); res.status(400).send({ message: "symbol not found" }); return; }
 
 
     if (isIndexSignaturesOfParedObj(myObj['0'])) {
-      dataArr = await Promise.all(
-        myObj['0'].fileArr.map(async (file, idx) => {
+      dataArr = 
+        myObj['0'].fileArr.map((file, idx) => {
           //metaData part
           const name = myObj['0'].AttrName;
           const val = myObj['0'].values[idx];
           const meta = { trait_type: name, value: val };
-
-          //image part
-          // const aImg : any = new Uint8Array(Object.values(file));
-          const aImg : any = file;
+          const aImg : Promise<Uint8Array> = new Promise(res=>res(file));
 
           return { imgBuffer: aImg, meta: [meta] };
         })
-      )
     }
     else { res.send({ message: 'received data is not right' }); return; }
 
-    // res.send({ message: 'ok' });
 
-    // 
     for (let index of Object.keys(myObj).slice(1, -4)) {
 
       if (isIndexSignaturesOfParedObj(myObj[index])) {
@@ -133,13 +130,17 @@ export default async function handler(
             newMeta.push(newMetaObj);
             // tmpArr.push({meta : newMeta});
             //img part
-            const baseImg = dataArr[dataArrIndex].imgBuffer;
-            const img = await
+            const bI = dataArr[dataArrIndex].imgBuffer;
+            const img = bI.then(baseImg=>{
+              return (
               sharp(baseImg)
-                .composite([
-                  { input: (new Uint8Array(Object.values(indexedObj.fileArr[myObjIndex])) as Buffer) }
-                ])
-                .toBuffer()
+              .composite([
+                { input: (new Uint8Array(Object.values(indexedObj.fileArr[myObjIndex])) as Buffer) }
+              ])
+              .toBuffer()
+              )
+            })
+            
 
             tmpArr.push({ imgBuffer: img, meta: newMeta });
           }
@@ -151,25 +152,23 @@ export default async function handler(
     // console.log('dataArr metadata is : ', dataArr.map(e => e.meta));
     // console.log('dataArr img is : ', dataArr.map(e => e.imgBuffer.length));
 
-    type DataArr = { imgBuffer: Buffer | Uint8Array, meta: { trait_type: string, value: string }[] }[];
+    
 
-
-
-
-    console.log(myObj.symbol);
-    const contractAddress = await deploy(myObj.projectName, myObj.symbol[0]);
-    if (!(await myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({ contractAddress: contractAddress, nftName: myObj.projectName })).acknowledged) { res.send({ message: 'db error' }); return; };
-    if (!(await myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({ contractAddress: contractAddress })).acknowledged) { res.send({ message: 'db error' }); return; };
+    const promiseArr : Array<Promise<any>> = [];
+    
     const dbImgItem =
       dataArr.map((e, idx) => {
         const imgObj: { [idx: string]: any } = {};
+        promiseArr.push(
+          e.imgBuffer.then(img=>{
+          imgObj['img'] = img;
+        })
+        )
         imgObj['index'] = idx;
-        imgObj['img'] = e.imgBuffer
         return imgObj;
       })
-    myClient.db(`${myObj.projectName}`).collection('img').insertMany(dbImgItem);
-
-    const dbMetaItem =
+      
+      const dbMetaItem =
       dataArr.map((e, idx) => {
         const metaObj: { [idx: string]: any } = {};
         metaObj['index'] = idx;
@@ -183,12 +182,18 @@ export default async function handler(
         }
         return metaObj;
       })
-    const dbres = await myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem);
+      myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem).then(dbres=>{
+        if (!dbres.acknowledged) { throw "db error"}
+      })
+      
+      Promise.all(promiseArr).then( x=>
+        myClient.db(`${myObj.projectName}`).collection('img').insertMany(dbImgItem).then(dbres=>{
+          if (!dbres.acknowledged) { throw "db error"}
+        })
+      )
 
 
-    if (dbres.acknowledged) { res.send({ message: true }); return; }
-    
-    res.send({message : "db error"})
+    res.send({message : true})
 
 
 
