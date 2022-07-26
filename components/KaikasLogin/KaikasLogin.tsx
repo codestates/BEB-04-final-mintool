@@ -1,6 +1,7 @@
 import { useAppContext } from '../../context/state'
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 
 const KaikasLogin = () => {
@@ -31,11 +32,11 @@ const KaikasLogin = () => {
         <>
             {isKaikas ?
                 context.accountAddress.length > 0 ?
-                    <Button color='inherit' disabled>Logined</Button>
+                    <Button color="inherit">Logined</Button>
                     :
                     <Button color="inherit" onClick={clickLogin}>KaikasLogin</Button>
                 :
-                <span>Kaikas needed</span> 
+                <Link href="https://chrome.google.com/webstore/detail/kaikas/jblndlipeogpafnldhgmapagcccfchpi?hl=ko"><Button color="inherit">install Kaikas</Button></Link> 
             }
         </>
     )

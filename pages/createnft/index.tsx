@@ -98,7 +98,11 @@ const CreateNFT: NextPage = () => {
       // console.log(messageObj);
       if(messageObj.message === true) { alert("nft creation done!")}
       else { alert("error")}
-    });
+    })
+    .catch(er=>{
+      setIsWainting(false);
+      alert("error message : " + er);
+    })
 
 
   }
@@ -140,16 +144,16 @@ const CreateNFT: NextPage = () => {
           )
         })
       }
-      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
+      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>add Tab</Button>
 
       <br />
-      <Button variant="contained" onClick={handleSend}>send</Button>
+      <Button variant="contained" onClick={handleSend}>Create Contract</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
-      <button onClick={() => { console.log(dataObj) }}>log dataObj</button>
+      {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
       : 
-      <div>login Plz</div>
+      <div>Please Connect your kaikas wallet.</div>
     }
     </>
   )

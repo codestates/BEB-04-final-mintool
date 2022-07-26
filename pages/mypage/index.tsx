@@ -15,7 +15,7 @@ const MyPage: NextPage = () => {
                     
                 </>
                 :
-                <div>Login plz</div>
+                <div>Please Connect your kaikas wallet.</div>
             }
         </>
     )
