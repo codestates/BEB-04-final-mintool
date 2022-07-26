@@ -76,7 +76,7 @@ export default async function handler(
 
     //site url : 마지막에 슬래시 없이 진행할 것.
     const siteURL = `http://${req.headers.host}`;
-    console.log(siteURL);
+    // console.log(siteURL);
     // const siteURL = "https://beb-04-final-mintool.vercel.app"
     let dataArr: Array<{ imgBuffer: Promise<Uint8Array>, meta: Array<{ trait_type: string, value: string }> }> = [];
     type DataArr = { imgBuffer: Buffer | Uint8Array, meta: { trait_type: string, value: string }[] }[];
@@ -90,7 +90,7 @@ export default async function handler(
     
     if(await myClient.db(`${myObj.projectName}`).collection('contract').find({}).toArray().then(r => r.length > 0)) { res.send({ message: 'nft already exists' }); return; }
     
-    deploy(myObj.projectName, myObj.symbol[0]).then(contractAddress=>{
+    const isContractDone = deploy(myObj.projectName, myObj.symbol[0]).then(contractAddress=>{
       myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({ contractAddress: contractAddress, nftName: myObj.projectName }).then(result=>{if(!result.acknowledged){throw "error db"} })
       myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({ contractAddress: contractAddress }).then(result=>{if(!result.acknowledged){throw "error db"} })
     })
@@ -187,12 +187,14 @@ export default async function handler(
         if (!dbres.acknowledged) { throw "db error"}
       })
       
-      Promise.all(promiseArr).then( x=>
+      const isImgDone = Promise.all(promiseArr).then( x=>
         myClient.db(`${myObj.projectName}`).collection('img').insertMany(dbImgItem).then(dbres=>{
           if (!dbres.acknowledged) { throw "db error"}
         })
       )
 
+    await isImgDone;
+    await isContractDone;
 
     res.send({message : true})
 

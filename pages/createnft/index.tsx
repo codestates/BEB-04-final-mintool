@@ -148,7 +148,7 @@ const CreateNFT: NextPage = () => {
       <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>add Tab</Button>
 
       <br />
-      <Button variant="contained" onClick={handleSend}>Create Contract</Button>
+      <Button variant="contained" onClick={handleSend} disabled={isWaiting ? true : false} >Create Contract</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
       {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}

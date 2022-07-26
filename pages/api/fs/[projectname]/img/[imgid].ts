@@ -10,22 +10,15 @@ export default function handler(
     // db access auth code neeeeeded!!  
     //
 
-    // console.log(projectname, imgid);
-    // res.send('hi');
     if (typeof projectname === 'string' && typeof imgid === 'string') {
-        promiseClinet.then(myClient =>{
+        promiseClinet
+        .then(myClient =>{
             myClient.db(projectname).collection('img').findOne({index : parseInt(imgid)})
             .then(pms=> pms?.img?.buffer)
             .then(r=>{res.write(r); res.end();})
         })
-        // const tmp = await myClient.db(projectname).collection('img').findOne({index : parseInt(imgid)});
-        // const retImg : Buffer = tmp?.img?.buffer;
-        
-        // res.write(retImg);
-        // res.end();
-        
-  
-       
+        .catch(e=>{ res.send({message: 'error db'}) });
+ 
     }
     else { res.send({message : 'wrong access!'}); return; }
 
