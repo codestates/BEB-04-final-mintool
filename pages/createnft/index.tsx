@@ -1,12 +1,9 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import React, { BaseSyntheticEvent, useState } from 'react'
-import styles from '../styles/Home.module.css'
+import React, { BaseSyntheticEvent, useEffect, useState } from 'react'
 import ImageLoader from '../../components/ImageLoader/ImageLoader'
 import { Button, CircularProgress, TextField, Typography } from '@mui/material'
-import AlertDialog from '../../components/Alert/Alert'
 import { useAppContext } from '../../context/state'
+import checkTicket from '../../lib/checkTicket'
 
 type dataObject = {
   [num: number]: {
@@ -37,9 +34,17 @@ const CreateNFT: NextPage = () => {
   const [external_urlValue, setExternal_urlValue] = useState<string>('');
   const [isWaiting, setIsWainting] = useState<Boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
+  const [haseTicket, setHasTicket] = useState<boolean>(false);
 
 
   const context = useAppContext();
+
+  useEffect(()=>{
+    const kltn = (window as any).klaytn;
+    if(kltn){
+      kltn.enable().then((addressArr : Array<string>)=>checkTicket(addressArr[0]).then(r=>setHasTicket(r)));
+    }
+  })
 
 
   const handleTextFieldChange = (e: BaseSyntheticEvent, handlesetFuncion: any) => {
@@ -115,6 +120,7 @@ const CreateNFT: NextPage = () => {
     <>
     {
       context?.accountAddress?.length > 0 ?
+      haseTicket ?
     <div className='container'>
       <div className='containerCenter'>
         <Typography variant="h2" component="h2">Create NFT</Typography>
@@ -153,6 +159,8 @@ const CreateNFT: NextPage = () => {
       {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
+    :
+    <div>you don't have ticket to use this page.</div>
       : 
       <div>Please Connect your kaikas wallet.</div>
     }

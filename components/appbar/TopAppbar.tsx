@@ -37,7 +37,7 @@ export default function TopAppbar() {
             <Button color="inherit" onClick={() => { router.push('/mint') }} >Mint</Button>
             <Button color="inherit" onClick={() => { router.push('/createnft') }} >CreateNFT</Button>
             <Button color="inherit" onClick={() => { router.push('/mypage') }} >MyPage</Button>
-            {/* <Button color="inherit" onClick={() => { router.push('/login') }} >Login</Button> */}
+            <Button color="inherit" onClick={() => { router.push('/ticket') }} >Ticket</Button>
             {/* <MetaMaskLogin cb={()=>{}}></MetaMaskLogin> */}
             <KaikasLogin></KaikasLogin>
           </div>
