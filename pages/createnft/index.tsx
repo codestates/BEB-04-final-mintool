@@ -34,7 +34,7 @@ const CreateNFT: NextPage = () => {
   const [external_urlValue, setExternal_urlValue] = useState<string>('');
   const [isWaiting, setIsWainting] = useState<Boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
-  const [haseTicket, setHasTicket] = useState<boolean>(false);
+  const [hasTicket, setHasTicket] = useState<boolean>(false);
   const [numLimit, setNumLimit] = useState<number>(0);
 
 
@@ -123,7 +123,7 @@ const CreateNFT: NextPage = () => {
     <>
     {
       context?.accountAddress?.length > 0 ?
-      haseTicket ?
+      hasTicket ?
     <div className='container'>
       <div className='containerCenter'>
         <Typography variant="h2" component="h2">Create NFT</Typography>
