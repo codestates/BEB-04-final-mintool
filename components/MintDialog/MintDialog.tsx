@@ -29,9 +29,9 @@ const SimpleDialog = (props: SimpleDialogProps) => {
         setIsWait(true);
         fetch('/api/mint',  {method:"POST", body: JSON.stringify({address : selectedValue.address, pn : selectedValue.pn ,bn : blockNum, mp: mintPrice, tn : selectedValue.tn, ca: selectedValue.ca}) } ) 
         .then(r=>r.text())
-        .then(console.log)
         .then(c=>setIsWait(false))
-        .then(z=>onClose(selectedValue))
+        .then(z=>onClose(true))
+        .catch(e=>onClose(false))
         
     }
 
