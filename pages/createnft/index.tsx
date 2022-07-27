@@ -35,6 +35,7 @@ const CreateNFT: NextPage = () => {
   const [isWaiting, setIsWainting] = useState<Boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
   const [haseTicket, setHasTicket] = useState<boolean>(false);
+  const [numLimit, setNumLimit] = useState<number>(0);
 
 
   const context = useAppContext();
@@ -51,9 +52,11 @@ const CreateNFT: NextPage = () => {
     handlesetFuncion(e.target.value);
   }
 
-  const handleSetDataObj = (key: number, obj: Object) => {
+  const handleSetDataObj = (key: number, obj: any) => {
     const myObj: { [key: number]: any } = { ...dataObj };
     myObj[key] = obj;
+    let curNum =  numLimit===0 ? 1*obj.fileArr.length : numLimit*obj.fileArr.length 
+    setNumLimit(curNum)
     setDataObj(myObj);
   }
 
@@ -103,7 +106,7 @@ const CreateNFT: NextPage = () => {
       setIsWainting(false);
       // console.log(messageObj);
       if(messageObj.message === true) { alert("nft creation done!")}
-      else { alert("error")}
+      else { alert(`${messageObj.message}`)}
     })
     .catch(er=>{
       setIsWainting(false);
@@ -152,9 +155,11 @@ const CreateNFT: NextPage = () => {
         })
       }
       <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>add Tab</Button>
+      <br/>
+      <>{numLimit>500 ? <Typography variant='h4' color="red">you exceed total number of nft!!</Typography> : <Typography variant='h4'>total nft #{numLimit}</Typography>}</>
 
       <br />
-      <Button variant="contained" onClick={handleSend} disabled={isWaiting ? true : false} >Create Contract</Button>
+      <Button variant="contained" onClick={handleSend} disabled={numLimit>500 ? true : isWaiting ? true : false} >Create Contract</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
       {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}

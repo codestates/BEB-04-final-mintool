@@ -114,7 +114,6 @@ const MintInfo = () => {
                                         <SearchProject projectName={e} cb={(n: number) => { setTotalNftNum(n) }} />
                                     </div>
                                     { isMintedArr[idx] ? <Button variant="outlined" onClick={() => withdraw(contractAddressArr[idx])}>Withdraw</Button> : <></>}
-                                    
                                 </div>
 
                             </TabPanel>

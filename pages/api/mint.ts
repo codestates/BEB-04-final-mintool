@@ -22,7 +22,7 @@ export default async function handler(
     try {
         if ((await myClient.db('mint').collection('mintCollections').insertOne({ projectName: pn, mintPrice: mp, mintBn: bn, ca: ca })).acknowledged) {
             // console.log(`${url}/api/fs/${pn}/meta`,address,bn,mp,ownerAddress)
-            if ((await setPublicMint(`${url}/api/fs/${pn}/meta/`, ca, bn, mp, address, tn))) {
+            if ((await setPublicMint(`http://${url}/api/fs/${pn}/meta/`, ca, bn, mp, address, tn))) {
                 res.send({ message: true });
                 if ((await myClient.db('users').collection(address).updateOne({ nftName: pn }, { $set: { isMinted: true } })).acknowledged) {
                     return;
