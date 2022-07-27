@@ -58,8 +58,8 @@ const MintContainer = (props: { nftName: string }) => {
                             </div>
                         </CardContent>
                                 <Divider></Divider>
-                                <div className="containerCenter">
-                                    <Button onClick={ ()=>{console.log("userwallet and contract",context.accountAddress,contract); publicMint(context.accountAddress,contract)} }>Mint</Button>
+                                <div>
+                                    <Button style={{width:"100%"}} onClick={ ()=>{console.log("userwallet and contract",context.accountAddress,contract); publicMint(context.accountAddress,contract)} }>Mint</Button>
                                 </div>
 
                     </Card>
