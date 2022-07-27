@@ -11,27 +11,25 @@ const ticketpage = ()=>{
     return (
         <div>
         { context.accountAddress.length > 0  ?
-        <div className="container">
+        <div className="container" >
                     <Card>
                         <CardHeader
-                            title="CreateNFT Pass"
+                            title="MinTool Pass"
                         />
-
-
                         <CardMedia
                             component="img"
-                            height="194"
+                            height="600"
                             image="https://opensea.mypinata.cloud/ipfs/QmaaS5wGctu9s6io5dkiJRmpHMHWkCC5iYSDrPZ76aDjmJ"
                             alt="NFT_image"
                         />
                         <CardContent>
-                            <div style={{display : 'flex', flexDirection:'column'}}>
+                            <div style={{display : 'flex', flexDirection:'column'} }>
                                 <div>price : 7 klay </div>
                             </div>
                         </CardContent>
                                 <Divider></Divider>
                                 <div>
-                                    <Button style={{width:"100%"}} onClick={ ()=>{ console.log(context.accountAddress); passMint(context.accountAddress)} }>Mint</Button>
+                                    <Button style={{width:"100%"}} onClick={ ()=>{passMint(context.accountAddress)} }>Mint</Button>
                                 </div>
 
                     </Card>
