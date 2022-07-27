@@ -4,6 +4,7 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import SearchProject from '../SearchProject/SearchProject';
 import BlockNum from '../BlockNum/BlockNum'
 import SimpleDialog from '../MintDialog/MintDialog';
+import withdraw from '../../lib/withdraw';
 
 declare let caver: any;
 declare let klaytn: any;
@@ -109,7 +110,7 @@ const MintInfo = () => {
                                     <div className="HorizontalContainer">
                                         <SearchProject projectName={e} cb={(n: number) => { setTotalNftNum(n) }} />
                                     </div>
-                                    { isMintedArr[idx] ? <Button variant="outlined">Withdraw</Button> : <></>}
+                                    { isMintedArr[idx] ? <Button variant="outlined" onClick={() => withdraw(contractAddressArr[idx])}>Withdraw</Button> : <></>}
                                 </div>
 
                             </TabPanel>
