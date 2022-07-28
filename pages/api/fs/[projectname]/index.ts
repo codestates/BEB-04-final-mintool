@@ -8,7 +8,6 @@ export default async function handler(
     res: NextApiResponse) {
     const { projectname } = req.query;           // 둘다 string 으로 들어온다. imgid 는 나중에 number값으로 넣어줘야 정상작동하더라.
     const {pageNum, numShow, total} = JSON.parse(req.body);
-    console.log("pageNum and numShow and total ",pageNum, numShow, total);
 
     if (typeof projectname === 'string') {
         const myClient = await promiseClinet;
