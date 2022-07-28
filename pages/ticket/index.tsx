@@ -20,10 +20,11 @@ const ticketpage = ()=>{
                             component="img"
                             height="600"
                             image="https://opensea.mypinata.cloud/ipfs/QmaaS5wGctu9s6io5dkiJRmpHMHWkCC5iYSDrPZ76aDjmJ"
-                            alt="NFT_image"
+                            alt="CreateNFT_pass_image"
                         />
                         <CardContent>
                             <div style={{display : 'flex', flexDirection:'column'} }>
+                                <div>nft# limit : 500</div>
                                 <div>price : 7 klay </div>
                             </div>
                         </CardContent>

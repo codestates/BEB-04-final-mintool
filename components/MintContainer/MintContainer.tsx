@@ -25,7 +25,6 @@ const MintContainer = (props: { nftName: string }) => {
         fetch('/api/contractfromname', { method: "POST", body: props.nftName })
             .then(r => r.json())
             .then(obj => { setContract(obj.contract); setDatas(obj)})
-            // .then(r=>console.log("Data is ",datas))
         return ()=>{
             if(window.caver){
                 clearInterval( myTimer );
@@ -44,6 +43,7 @@ const MintContainer = (props: { nftName: string }) => {
 
 
                         <CardMedia
+                            sx={{padding:'15px'}}
                             component="img"
                             height="194"
                             image={`/api/fs/${props.nftName}/img/0`}

@@ -87,7 +87,13 @@ export default async function handler(
     const myClient = await promiseClient;
     await bbPromise;
     const myObj: reqBodyObject = dataObj;
+
+    let limitNum = 1;
+    Object.keys(myObj).slice(0,-4).forEach(idx=>{
+      limitNum = limitNum * myObj[idx].fileArr.length;
+    }) 
     
+    if(limitNum > 500) { res.send({message : 'nft number exceeds limitation'}); return; }
     if(await myClient.db(`${myObj.projectName}`).collection('contract').find({}).toArray().then(r => r.length > 0)) { res.send({ message: 'nft already exists' }); return; }
     
     const isContractDone = deploy(myObj.projectName, myObj.symbol[0]).then(contractAddress=>{

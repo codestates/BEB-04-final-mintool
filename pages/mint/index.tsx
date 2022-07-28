@@ -19,7 +19,7 @@ const mintpage = () => {
     return (
         <div className="container">
             {/* mint page */}
-            <div className='HorizontalContainer'>
+            <div className='HorizontalContainer marginChild'>
 
                 {isLoading ?
                     <CircularProgress></CircularProgress>
