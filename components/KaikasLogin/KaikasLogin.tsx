@@ -2,6 +2,7 @@ import { useAppContext } from '../../context/state'
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { createRouteLoader } from 'next/dist/client/route-loader';
 
 
 const KaikasLogin = () => {
@@ -13,6 +14,7 @@ const KaikasLogin = () => {
         if ((window as any).klaytn) {
             const accounts = await (window as any).klaytn.enable().then((r: any) => r[0]);
             context.changeAccountAddress(accounts[0]);
+            location.reload()
         }
     }
 
