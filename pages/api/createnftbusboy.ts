@@ -183,7 +183,7 @@ export default async function handler(
         {
           description: myObj.description,
           external_url: myObj.external_url,
-          image: `${siteURL}/api/fs/${myObj.projectName}/img/${idx}`,
+          image_data: `${siteURL}/api/fs/${myObj.projectName}/img/${idx}`,
           name: `${myObj.symbol[0]}#${idx}`,
           attributes: e.meta
         }

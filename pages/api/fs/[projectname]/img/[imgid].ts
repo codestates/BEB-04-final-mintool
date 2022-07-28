@@ -15,7 +15,7 @@ export default function handler(
         .then(myClient =>{
             myClient.db(projectname).collection('img').findOne({index : parseInt(imgid)})
             .then(pms=> pms?.img?.buffer)
-            .then(r=>{res.write(r); res.end();})
+            .then(r=>{  res.write(r); res.end();})
         })
         .catch(e=>{ res.send({message: 'error db'}) });
  
