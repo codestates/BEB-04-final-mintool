@@ -83,7 +83,6 @@ const siteURL = req.headers.host;
     if (isIndexSignaturesOfParedObj(myObj[index])) {
       const indexedObj = myObj[index] as indexSignaturesOfParedObj;
       const indexAttrName = indexedObj.AttrName;
-      console.log(indexAttrName);
 
       const tmpArr = [];
       for (let dataArrIndex in dataArr) {
@@ -116,8 +115,6 @@ const siteURL = req.headers.host;
     }
     else { console.log({ message: 'received data is not right' }); return; }
   }
-  console.log('dataArr metadata is : ', dataArr.map(e => e.meta));
-  console.log('dataArr img is : ', dataArr.map(e => e.imgBuffer.length));
 
   type DataArr = { imgBuffer: Buffer | Uint8Array, meta: { trait_type: string, value: string }[] }[];
 
@@ -143,7 +140,6 @@ const siteURL = req.headers.host;
 
   const myClient = await mongoClient;
 
-  console.log(myObj.symbol);
   const contractAddress = await deploy(myObj.projectName, myObj.symbol[0]);
   if(!(await myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({contractAddress : contractAddress, nftName : myObj.projectName})).acknowledged) {console.log({message:'db error'}); return; };
   if(!(await myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({contractAddress : contractAddress})).acknowledged) {console.log({message:'db error'}); return; };

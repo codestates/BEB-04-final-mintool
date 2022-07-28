@@ -14,10 +14,9 @@ const SearchProject = (props: any) => {
         if (props.projectName) {
             setIsWainting(true);
             fetch(`/api/fs/${props.projectName}`, { method: "POST", body: JSON.stringify({ pageNum: pageNum, numShow: 14, total: metaDataArr.length > 0 ? false : true }) })
-                .then(r => { console.log(r); return r.json()})
+                .then(r => {  return r.json()})
                 .then(x => { setIsWainting(false); setMetaDataArr(Object.values(x.meta)); setTotalNum(x.total > totalNum ? x.total : totalNum);   return x; })
                 .then(n => { if (props.cb) { props.cb(Object.keys(n.meta).length) } })
-                .then(c => console.log(metaDataArr))
         }
     }, [pageNum])
 
