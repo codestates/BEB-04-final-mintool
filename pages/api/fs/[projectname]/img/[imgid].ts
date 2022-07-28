@@ -14,7 +14,7 @@ export default async function handler(
             .then(async myClient => {
                 await myClient.db(projectname).collection('img').findOne({ index: parseInt(imgid) })
                     .then( pms =>  pms?.img?.buffer)
-                    .then( r => {  res.write(r);  res.end(); })
+                    .then( r => {  res.setHeader('Content-Type','image/png'); res.setHeader('Content-length', r.length); res.write(r);  res.end(); })
             })
             .catch(e => { res.send({ message: 'error db' }) });
 
