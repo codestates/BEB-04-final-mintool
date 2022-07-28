@@ -10,11 +10,9 @@ export default async function handler(
     res: NextApiResponse
 ) {
 
-    console.log(req.body)
     const url = req.headers.host;
     const { address, pn, bn, mp, tn, ca } = JSON.parse(req.body);          //address : wallet address, pn : projectName, bn : blockNum to start minting, mp : mint price
     // console.log(typeof address, typeof pn, typeof bn, typeof mp);     // all data is string.
-    console.log("address,pn,bn,mp,tn,ca",address, pn, bn, mp, tn, ca);
 
 
     // DB에서 유저에서 업데이트 + users.
