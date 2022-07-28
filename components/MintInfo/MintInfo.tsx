@@ -109,11 +109,11 @@ const MintInfo = () => {
                         return (
                             <TabPanel key={`${e}+idx`} value={value} index={idx} >
                                 <div className="containerCenter">
-                                    {isMintedArr[idx] ? <Button disabled={true} variant="outlined" >Minted</Button> : <Button variant="outlined" onClick={handleClickOpen} disabled={isMintOk} >Mint!</Button>}
+                                    { isMintedArr[idx] ? <Button variant="outlined" onClick={() => withdraw(contractAddressArr[idx])}>Withdraw</Button> : <></>}
+                                    {isMintedArr[idx] ? <Button disabled={true} >Minted</Button> : <Button variant="outlined" onClick={handleClickOpen} disabled={isMintOk} >Mint!</Button>}
                                     <div className="HorizontalContainer">
                                         <SearchProject projectName={e} cb={(n: number) => { setTotalNftNum(n) }} />
                                     </div>
-                                    { isMintedArr[idx] ? <Button variant="outlined" onClick={() => withdraw(contractAddressArr[idx])}>Withdraw</Button> : <></>}
                                 </div>
 
                             </TabPanel>
