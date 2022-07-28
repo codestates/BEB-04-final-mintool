@@ -13,6 +13,7 @@ const KaikasLogin = () => {
         if ((window as any).klaytn) {
             const accounts = await (window as any).klaytn.enable().then((r: any) => r[0]);
             context.changeAccountAddress(accounts[0]);
+            location.reload()
         }
     }
 
