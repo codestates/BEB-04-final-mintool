@@ -33,6 +33,3 @@ pass NFT의 2차마켓 거래 수익(creater fee)
 - pass NFT의 2차마켓 거래 수익(creater fee)
 - 기능에 제한을 두어 제한된 기능
 을 쓰기위한 클레이튼 지불방식
-z
-## 기능별 시연 영상
-
