@@ -9,6 +9,7 @@ export default async function handler(
     const { projectname, imgid } = req.query;           // 둘다 string 으로 들어온다. imgid 는 나중에 number값으로 넣어줘야 정상작동하더라.
 
     if (typeof projectname === 'string' && typeof imgid === 'string') {
+
         await promiseClinet
             .then(async myClient => {
                 await myClient.db(projectname).collection('img').findOne({ index: parseInt(imgid) })
