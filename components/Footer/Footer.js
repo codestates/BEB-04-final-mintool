@@ -11,7 +11,7 @@ export default function Footer() {
                 <Typography variant="h5" fontFamily="Fantasy">Git Link</Typography>
                 <div>
                     <IconButton><Link href="https://github.com/ckh7488"><div><GitHubIcon />ckh7488</div></Link></IconButton>
-                    <IconButton><Link href="https://github.com/bing72"><div><GitHubIcon />bing74</div></Link></IconButton>
+                    <IconButton><Link href="https://github.com/bing72"><div><GitHubIcon />bing72</div></Link></IconButton>
                 </div>
             </div>
             {/* <Image src={Mintool} height="250" color='red'/>                */}
