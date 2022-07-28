@@ -79,7 +79,7 @@ const MintInfo = () => {
 
     return (
         <div >
-            <div style={{ width: '100vw', minHeight: '100vh', padding: '10px', float: 'left' }}>
+            <div style={{ minWidth: '99vw', minHeight: '100vh', padding: '10px', float: 'left' }}>
 
                 <Tabs value={value} onChange={handleChange}>
 
