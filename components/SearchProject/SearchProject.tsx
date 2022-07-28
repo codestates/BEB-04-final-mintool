@@ -1,35 +1,43 @@
-import {  Card,  CardContent, CardMedia, Chip, CircularProgress, Divider, TextField, Typography } from "@mui/material";
+import { Button, Card, CardContent, CardMedia, Chip, CircularProgress, Divider, Input, TextField, Typography } from "@mui/material";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-const SearchProject = () => {
-
-    const [projectName, setProjectName] = useState<string>('');
+const SearchProject = (props: any) => {
     const [metaDataArr, setMetaDataArr] = useState<Array<any>>([]);
     const [isWaiting, setIsWainting] = useState<Boolean>(false);
+    const [pageNum, setPageNum] = useState<number>(1);
+    const [totalNum, setTotalNum] = useState<number>(0);
+
+    useEffect(() => {
+        if (props.projectName) {
+            setIsWainting(true);
+            fetch(`/api/fs/${props.projectName}`, { method: "POST", body: JSON.stringify({ pageNum: pageNum, numShow: 14, total: metaDataArr.length > 0 ? false : true }) })
+                .then(r => {  return r.json()})
+                .then(x => { setIsWainting(false); setMetaDataArr(Object.values(x.meta)); setTotalNum(x.total > totalNum ? x.total : totalNum);   return x; })
+                .then(n => { if (props.cb) { props.cb(Object.keys(n.meta).length) } })
+        }
+    }, [pageNum])
 
 
-    const handleEnter = () => {
-        setIsWainting(true);
-        fetch(`/api/fs/${projectName}`, { method: "POST", })
-            .then(r => r.json())
-            .then(x => { setIsWainting(false); console.log(x, Object.keys(x.meta), Object.values(x.meta)); setMetaDataArr(Object.values(x.meta)); return x; })
-        // .then(rj => setMetaDataArr(Object.values(rj.meta)))
-
+    const handleNextPage = (n: number) => {
+        let pn = pageNum+n;
+        if(0<pn && pn < totalNum/14) setPageNum(pageNum + n);
     }
 
     return (
         <div className="container">
-            <TextField
-                onChange={(e) => { setProjectName(e.target.value) }}
-                onKeyUp={(e) => { if (e.key === 'Enter') { handleEnter() } }}
-                value={projectName}
-                label="ProjectName" />
-            {isWaiting ? <CircularProgress/> : <></>}
+            <div>
+                <Button onClick={() => { handleNextPage(-1) }} ><ArrowLeftIcon></ArrowLeftIcon></Button>
+                <Input size="small" style={{ width: '35px' }} inputProps={{ style: { textAlign: 'center' } }} value={pageNum} disabled={true}></Input>
+                <Button onClick={() => { handleNextPage(1) }}><ArrowRightIcon></ArrowRightIcon></Button>
+            </div>
+            {isWaiting ? <CircularProgress /> : <></>}
             <div className="HorizontalContainer">
                 {metaDataArr.map((metaData, idx) => {
                     const metaDataObj: any = metaData.object ?? null;
-                    const imgSrc = `http://${metaDataObj.image}`;
+                    const imgSrc = `${metaDataObj.image}`;
                     return (
                         <div style={{ margin: '5px' }} key={metaDataObj.name}>
                             <Card>

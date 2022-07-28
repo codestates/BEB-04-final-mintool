@@ -1,11 +1,9 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import React, { BaseSyntheticEvent, useState } from 'react'
-import styles from '../styles/Home.module.css'
+import React, { BaseSyntheticEvent, useEffect, useState } from 'react'
 import ImageLoader from '../../components/ImageLoader/ImageLoader'
 import { Button, CircularProgress, TextField, Typography } from '@mui/material'
-import AlertDialog from '../../components/Alert/Alert'
+import { useAppContext } from '../../context/state'
+import checkTicket from '../../lib/checkTicket'
 
 type dataObject = {
   [num: number]: {
@@ -16,9 +14,10 @@ type dataObject = {
   description?: string,
   external_url?: string,
   projectName?: string,
-  symbol?: string
+  symbol?: Array<string>
 }
 
+declare let klaytn : any;
 
 const MyImg: Function = (mySrc: Uint8Array) => {
   return URL.createObjectURL(
@@ -35,14 +34,29 @@ const CreateNFT: NextPage = () => {
   const [external_urlValue, setExternal_urlValue] = useState<string>('');
   const [isWaiting, setIsWainting] = useState<Boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
+  const [hasTicket, setHasTicket] = useState<boolean>(false);
+  const [numLimit, setNumLimit] = useState<number>(0);
+
+
+  const context = useAppContext();
+
+  useEffect(()=>{
+    const kltn = (window as any).klaytn;
+    if(kltn){
+      kltn.enable().then((addressArr : Array<string>)=>checkTicket(addressArr[0]).then(r=>setHasTicket(r)));
+    }
+  })
+
 
   const handleTextFieldChange = (e: BaseSyntheticEvent, handlesetFuncion: any) => {
     handlesetFuncion(e.target.value);
   }
 
-  const handleSetDataObj = (key: number, obj: Object) => {
+  const handleSetDataObj = (key: number, obj: any) => {
     const myObj: { [key: number]: any } = { ...dataObj };
     myObj[key] = obj;
+    let curNum =  numLimit===0 ? 1*obj.fileArr.length : numLimit*obj.fileArr.length 
+    setNumLimit(curNum)
     setDataObj(myObj);
   }
 
@@ -51,7 +65,7 @@ const CreateNFT: NextPage = () => {
     setAttrTabArr(newAttrTabArr);
   }
 
-  const handleSend = () => {
+  const handleSend = async () => {
 
     setIsWainting(true);
     dataObj.description = descriptionValue ?? '';
@@ -59,49 +73,57 @@ const CreateNFT: NextPage = () => {
     if (projectName.length < 1) { setIsWainting(false); alert('projectName should have values'); return; }
     if (symbol.length < 1) { setIsWainting(false); alert('projectName should have values'); return; }
     dataObj.projectName = projectName;
-    dataObj.symbol = symbol;
+    dataObj.symbol = [symbol, await klaytn.enable().then((r:any)=>r[0])]
 
-
+    const objKey = Object.keys(dataObj);
     let isRight = true;
-    Object.keys(dataObj).slice(0, -4).forEach(k => {
+    if(objKey.length === 4) isRight=false;
+    if( objKey.filter(e=>e==="0").length === 0 ) isRight=false;
+    objKey.slice(0, -4).forEach(k => {
       const kNumber = parseInt(k);
       if (dataObj[kNumber].fileArr.length < 1) isRight = false;
       if (dataObj[kNumber].fileArr.length !== dataObj[kNumber].values.length) isRight = false;
       if (dataObj[kNumber].AttrName === undefined) isRight = false;
     })
+
     if (!isRight) { alert("Image input is not right"); setIsWainting(false); return; }
 
-    const promiseArr = Object.keys(dataObj).slice(0, -4).map(myKey => {
 
-      const objKey = parseInt(myKey);
-      const a: Array<Promise<Uint8Array>> = dataObj[objKey].fileArr.map(file => {
-        if (file.arrayBuffer) return (file as File).arrayBuffer().then(ab => new Uint8Array(ab));
-        return file;
-      })
-      console.log("a : ", a);
-      return Promise.all(a)
-        .then((x: Array<Uint8Array>) => {
-
-          dataObj[objKey].fileArr = x;
-        })
+    const myForm = new FormData();
+    objKey
+    .slice(0,-4)
+    .forEach((key: string, i)=>{
+      const k = parseInt(key);
+      dataObj[k].fileArr.forEach((fileObj : any)=>
+        myForm.append(key, fileObj, fileObj.name)
+      )
     })
-    console.log("promiseArr : ", promiseArr);
+    myForm.append("myObj", JSON.stringify(dataObj));
 
-    Promise.all(promiseArr)
-      // .then(x=> {dataObj.description = descriptionValue; dataObj.external_url=external_urlValue; return 1;} )
-      .then(t => fetch('/api/createnft', { method: "POST", body: JSON.stringify(dataObj) })
-        .then(w => w.json())
-        .then(sres => {
-          setIsWainting(false);
-          if (sres.message) { alert("NFT creation done!"); }
-          else { alert("error") }
-        }))
+    fetch('/api/createnftbusboy',{method:"POST", body:myForm})
+    .then(r=>r.json())
+    .then(messageObj=>{
+      setIsWainting(false);
+      // console.log(messageObj);
+      if(messageObj.message === true) { alert("nft creation done!")}
+      else { alert(`${messageObj.message}`)}
+    })
+    .catch(er=>{
+      setIsWainting(false);
+      alert("error message : " + er);
+    })
+
+
   }
 
 
 
 
   return (
+    <>
+    {
+      context?.accountAddress?.length > 0 ?
+      hasTicket ?
     <div className='container'>
       <div className='containerCenter'>
         <Typography variant="h2" component="h2">Create NFT</Typography>
@@ -115,30 +137,39 @@ const CreateNFT: NextPage = () => {
           <TextField label="external_url" multiline onChange={(e) => { handleTextFieldChange(e, setExternal_urlValue) }} value={external_urlValue}></TextField>
         </div>
 
-        <Typography variant="h4" component="div">Bottom layer</Typography>
+        <Typography variant="h4" component="div">Layer 0</Typography>
         <ImageLoader myKey={0} handleSetDataObj={handleSetDataObj}></ImageLoader>
       </div>
       <br />
 
-      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>addTabs</Button>
+      
       <br />
       {
-        attrTabArr.slice(1).map(e => {
+        attrTabArr.slice(1).map((e,idx) => {
           return (
             <div key={e} className="containerCenter">
-              <Typography variant="h6" component="div">Bottom layer</Typography>
+              <Typography variant="h6" component="div">Layer {idx+1}</Typography>
               <ImageLoader handleDel={handleDel} myKey={e} handleSetDataObj={handleSetDataObj}></ImageLoader>
             </div>
           )
         })
       }
+      <Button variant="contained" onClick={() => { setAttrTabArr([...attrTabArr, attrTabArr.slice(-1)[0] + 1]) }}>add Tab</Button>
+      <br/>
+      <>{numLimit>500 ? <Typography variant='h4' color="red">you exceed total number of nft!!</Typography> : <Typography variant='h4'>total nft #{numLimit}</Typography>}</>
 
       <br />
-      <Button variant="contained" onClick={handleSend}>send</Button>
+      <Button variant="contained" onClick={handleSend} disabled={numLimit>500 ? true : isWaiting ? true : false} >Create Contract</Button>
       {isWaiting ? <CircularProgress></CircularProgress> : <></>}
-      <button onClick={() => { console.log(dataObj) }}>log dataObj</button>
+      {/* <button onClick={() => { console.log(dataObj) }}>log dataObj</button> */}
       {/* <button onClick={() => { console.log(attrTabArr)}}>tabs</button> */}
     </div>
+    :
+    <div>you don't have ticket to use this page.</div>
+      : 
+      <div>Please Connect your kaikas wallet.</div>
+    }
+    </>
   )
 }
 

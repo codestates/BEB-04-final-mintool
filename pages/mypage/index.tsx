@@ -11,11 +11,11 @@ const MyPage: NextPage = () => {
         <>
             {context.accountAddress.length > 0 ?
                 <>
-                    <SearchProject></SearchProject>
                     <MintInfo></MintInfo>
+                    
                 </>
                 :
-                <div>Login plz</div>
+                <div>Please Connect your kaikas wallet.</div>
             }
         </>
     )

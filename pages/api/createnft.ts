@@ -2,6 +2,7 @@
 import sharp from 'sharp';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import mongoClient from '../../lib/mongodb'
+import deploy from '../../lib/deploy'
 require('dotenv').config();
 
 
@@ -74,13 +75,14 @@ const siteURL = req.headers.host;
   }
   else { res.send({ message: 'received data is not right' }); return; }
 
+  res.send({message: 'ok'});
+
   // 
   for (let index of Object.keys(myObj).slice(1, -4)) {
 
     if (isIndexSignaturesOfParedObj(myObj[index])) {
       const indexedObj = myObj[index] as indexSignaturesOfParedObj;
       const indexAttrName = indexedObj.AttrName;
-      console.log(indexAttrName);
 
       const tmpArr = [];
       for (let dataArrIndex in dataArr) {
@@ -111,10 +113,8 @@ const siteURL = req.headers.host;
       }
       dataArr = tmpArr;
     }
-    else { res.send({ message: 'received data is not right' }); return; }
+    else { console.log({ message: 'received data is not right' }); return; }
   }
-  console.log('dataArr metadata is : ', dataArr.map(e => e.meta));
-  console.log('dataArr img is : ', dataArr.map(e => e.imgBuffer.length));
 
   type DataArr = { imgBuffer: Buffer | Uint8Array, meta: { trait_type: string, value: string }[] }[];
 
@@ -140,8 +140,9 @@ const siteURL = req.headers.host;
 
   const myClient = await mongoClient;
 
-  myClient.db('users').collection('')
-
+  const contractAddress = await deploy(myObj.projectName, myObj.symbol[0]);
+  if(!(await myClient.db('users').collection(`${myObj.symbol[1]}`).insertOne({contractAddress : contractAddress, nftName : myObj.projectName})).acknowledged) {console.log({message:'db error'}); return; };
+  if(!(await myClient.db(`${myObj.projectName}`).collection(`contract`).insertOne({contractAddress : contractAddress})).acknowledged) {console.log({message:'db error'}); return; };
   const dbImgItem =
     dataArr.map((e, idx) => {
       const imgObj: { [idx: string]: any } = {};
@@ -171,15 +172,16 @@ const siteURL = req.headers.host;
         description: myObj.description,
         external_url: myObj.external_url,
         image: `${siteURL}/api/fs/${myObj.projectName}/img/${idx}`,
-        name : `${myObj.projectName} #${idx}`,
+        name : `${myObj.symbol[0]}#${idx}`,
         attributes : e.meta
       }
       return metaObj;
     })
   const dbres = await myClient.db(`${myObj.projectName}`).collection('meta').insertMany(dbMetaItem);
 
-  if(dbres.acknowledged) {res.send({message : true}); return;}
-  res.send({message : false});
+  
+  if(dbres.acknowledged) {console.log({message : true}); return;}
+  console.log({message : false});
 
 }
 
@@ -187,7 +189,7 @@ const siteURL = req.headers.host;
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '100mb' // Set desired value here
+      sizeLimit: '4.5mb' // Set desired value here
     }
   }
 }

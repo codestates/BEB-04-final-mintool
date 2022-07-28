@@ -1,19 +1,20 @@
+// import Image from 'next/image'
+// import Mintool from '../../public/MinTool.png'
+import GitHubIcon from '@mui/icons-material/GitHub';
+import { IconButton, Typography } from '@mui/material';
+import Link from 'next/link';
+
 export default function Footer() {
     return (
-        <>
-            <footer>
-                <a
-                    // href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    // target="_blank"
-                    // rel="noopener noreferrer"
-                >
-                    {/* Powered by{' '}
-                    <img src="/vercel.svg" alt="Vercel Logo" className="logo" /> */}
-                    this is footer
-                </a>
-            </footer>
-
-
-        </>
+        <footer>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Typography variant="h5" fontFamily="Fantasy">Git Link</Typography>
+                <div>
+                    <IconButton><Link href="https://github.com/ckh7488"><div><GitHubIcon />ckh7488</div></Link></IconButton>
+                    <IconButton><Link href="https://github.com/bing72"><div><GitHubIcon />bing72</div></Link></IconButton>
+                </div>
+            </div>
+            {/* <Image src={Mintool} height="250" color='red'/>                */}
+        </footer>
     )
 }
