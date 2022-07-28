@@ -2,7 +2,6 @@ import { useAppContext } from '../../context/state'
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { createRouteLoader } from 'next/dist/client/route-loader';
 
 
 const KaikasLogin = () => {
